@@ -1,0 +1,6 @@
+{
+  "name": "Big on Productivity",
+  "description": "Curated RSS news reader, AI-powered CAT Verbal Reading Comprehension quiz generator, PDF study project tracker, calendar day planner, and performance analytics dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
