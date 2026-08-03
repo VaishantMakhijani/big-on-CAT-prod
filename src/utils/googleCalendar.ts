@@ -7,6 +7,7 @@ import {
   signOut,
   User,
 } from 'firebase/auth';
+console.log("FIREBASE_KEY_TEST:", import.meta.env.VITE_FIREBASE_API_KEY);
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
