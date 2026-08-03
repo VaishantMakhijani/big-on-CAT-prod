@@ -25,6 +25,7 @@
     "rss-parser": "^3.13.0"
   },
   "devDependencies": {
+    "@vercel/node": "^3.0.0",
     "@types/node": "^22.14.0",
     "autoprefixer": "^10.4.21",
     "esbuild": "^0.25.0",
