@@ -4,9 +4,30 @@ import { GoogleGenAI } from "@google/genai";
 import fs from 'fs';
 import path from 'path';
 
-// Read the file at runtime instead of importing it directly
-const wordsPath = path.join(process.cwd(), 'api', 'words.json');
-const wordsList: string[] = JSON.parse(fs.readFileSync(wordsPath, 'utf-8'));
+// Read the CSV file directly (same logic you used in generate-ai-puzzle.ts)
+const csvPath = path.join(process.cwd(), 'api', 'words.csv');
+const fileContent = fs.readFileSync(csvPath, 'utf-8');
+const lines = fileContent.split('\n');
+// Check if the first line is a header (contains "word" or "zipf")
+const header = lines[0]?.toLowerCase() || '';
+const hasHeader = header.includes('word') || header.includes('zipf');
+const startIndex = hasHeader ? 1 : 0;
+
+const wordsList: string[] = [];
+for (let i = startIndex; i < lines.length; i++) {
+  const line = lines[i].trim();
+  if (!line) continue;
+  const parts = line.split(',');
+  let word = parts[0].trim().toLowerCase();
+  // Remove quotes if present
+  if (word.startsWith('"') && word.endsWith('"')) {
+    word = word.slice(1, -1);
+  }
+  // Only keep 9-letter valid words
+  if (word.length === 9 && /^[a-z]+$/.test(word)) {
+    wordsList.push(word);
+  }
+}
 
 
 // Helper: Create a frequency map of letters (from find-puzzle-words.ts)
