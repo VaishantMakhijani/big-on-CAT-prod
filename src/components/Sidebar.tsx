@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   Timer,
   PlusCircle,
@@ -29,6 +29,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onOpenTimer,
 }) => {
   const [studySummary, setStudySummary] = React.useState({ overdue: 0, open: 0, closed: 0 });
+
+  // MEMOIZED CALLBACK: Prevents infinite loop
+  const handleUpdateSummary = useCallback((overdue: number, open: number, closed: number) => {
+    setStudySummary({ overdue, open, closed });
+  }, []);
 
   const handleTriggerAddBook = () => {
     document.getElementById('trigger-add-study-book')?.click();
@@ -106,9 +111,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           books={books}
           onBooksChange={onBooksChange}
           onOpenPdf={onOpenPdf}
-          onUpdateSummary={(overdue, open, closed) =>
-            setStudySummary({ overdue, open, closed })
-          }
+          onUpdateSummary={handleUpdateSummary} // <--- USES STABLE FUNCTION
         />
       </div>
 

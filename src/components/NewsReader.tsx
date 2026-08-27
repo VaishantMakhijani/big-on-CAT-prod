@@ -27,6 +27,7 @@ interface NewsReaderProps {
     isPriority: boolean,
     readingTimeSec: number
   ) => void;
+  onOpenWordPower: () => void;
 }
 
 const CATEGORY_NAMES = [
@@ -41,6 +42,7 @@ export const NewsReader: React.FC<NewsReaderProps> = ({
   onOpenSettings,
   onOpenAnalytics,
   onStartQuiz,
+  onOpenWordPower,
 }) => {
   const [categories, setCategories] = useState<Record<string, Article[]>>({});
   const [loading, setLoading] = useState(false);
@@ -79,6 +81,11 @@ export const NewsReader: React.FC<NewsReaderProps> = ({
     setSyncStatus('Fetching RSS feeds...');
     try {
       const res = await fetch('/api/rss');
+      if (!res.ok) {
+        console.error("RSS API failed:", res.status);
+        setCategories([]); // Or whatever your empty state is
+        return;
+      }
       const data = await res.json();
 
       if (data.success && data.categories) {
@@ -256,6 +263,18 @@ export const NewsReader: React.FC<NewsReaderProps> = ({
             )}
           </div>
         </div>
+
+        {/* WORD POWER BUTTON */}
+        <button
+          onClick={onOpenWordPower}
+          className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white text-xs font-bold px-5 py-2 rounded-lg shadow-md transition-all cursor-pointer shrink-0 self-start sm:self-auto"
+        >
+          <Sparkles className="w-4 h-4" />
+          <div className="flex flex-col items-start leading-tight">
+            <span>WORD POWER</span>
+            <span className="text-[9px] text-yellow-300 font-medium">for Competitive Exams</span>
+          </div>
+        </button>
 
         <button
           onClick={fetchNews}

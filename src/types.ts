@@ -84,3 +84,27 @@ export interface QuestionTimerLap {
   durationSec: number;
   timestamp: string;
 }
+
+export interface WordPowerWord {
+  word: string;
+  definition: string;
+  example: string;
+}
+
+export interface WordPowerPuzzle {
+  date: string;
+  letters: string[];
+  allWords?: WordPowerWord[];      // optional – we'll use wordDetails
+  wordDetails?: WordPowerWord[];   // new field
+  validWords: string[];
+  targetCount: number;
+}
+
+export interface WordPowerProgress {
+  puzzleDate: string;           // date of the puzzle
+  foundWords: string[];         // list of found words
+  startTime: number;            // timestamp when started
+  elapsedSeconds: number;       // current elapsed time
+  score: number;
+  completed: boolean;           // true if all found or revealed
+}

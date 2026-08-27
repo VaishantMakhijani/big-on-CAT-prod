@@ -1,0 +1,356 @@
+{
+  "puzzleId": "puzzle_2026-08-25",
+  "date": "2026-08-25",
+  "centerLetter": "e",
+  "availableLetters": [
+    "i",
+    "n",
+    "g",
+    "t",
+    "n",
+    "m",
+    "c",
+    "e"
+  ],
+  "validWords": [
+    "cementing",
+    "meeting",
+    "teeming",
+    "cement",
+    "entice",
+    "genie",
+    "mince",
+    "tinge",
+    "cent",
+    "cite",
+    "emit",
+    "gene",
+    "gent",
+    "item",
+    "mice",
+    "mien",
+    "mine",
+    "mite",
+    "nice",
+    "teem",
+    "teen",
+    "time",
+    "tine"
+  ],
+  "targetCount": 23,
+  "wordDetails": [
+    {
+      "word": "cementing",
+      "definition": "binding or uniting firmly together; applying cement to a surface",
+      "example": "Their shared experiences were cementing a lifelong friendship.; Workers were cementing the bricks to build the wall.",
+      "meanings": [
+        {
+          "definition": "binding or uniting firmly together",
+          "example": "Their shared experiences were cementing a lifelong friendship."
+        },
+        {
+          "definition": "applying cement to a surface",
+          "example": "Workers were cementing the bricks to build the wall."
+        }
+      ]
+    },
+    {
+      "word": "meeting",
+      "definition": "an assembly of people for discussion or entertainment; a coming together of two or more people",
+      "example": "The team scheduled a meeting to discuss the project goals.; Their chance meeting at the café changed everything.",
+      "meanings": [
+        {
+          "definition": "an assembly of people for discussion or entertainment",
+          "example": "The team scheduled a meeting to discuss the project goals."
+        },
+        {
+          "definition": "a coming together of two or more people",
+          "example": "Their chance meeting at the café changed everything."
+        }
+      ]
+    },
+    {
+      "word": "teeming",
+      "definition": "abounding or swarming with something",
+      "example": "The lake was teeming with fish.",
+      "meanings": [
+        {
+          "definition": "abounding or swarming with something",
+          "example": "The lake was teeming with fish."
+        }
+      ]
+    },
+    {
+      "word": "cement",
+      "definition": "a powdery substance used in building that sets hard when mixed with water; something that serves to unite or bind things together; to settle or establish firmly",
+      "example": "They poured cement to form the foundation of the house.; Trust is the cement of a good relationship.; The agreement helped cement the partnership between the two companies.",
+      "meanings": [
+        {
+          "definition": "a powdery substance used in building that sets hard when mixed with water",
+          "example": "They poured cement to form the foundation of the house."
+        },
+        {
+          "definition": "something that serves to unite or bind things together",
+          "example": "Trust is the cement of a good relationship."
+        },
+        {
+          "definition": "to settle or establish firmly",
+          "example": "The agreement helped cement the partnership between the two companies."
+        }
+      ]
+    },
+    {
+      "word": "entice",
+      "definition": "to attract or tempt by offering pleasure or advantage",
+      "example": "The bakery used the smell of fresh bread to entice customers inside.",
+      "meanings": [
+        {
+          "definition": "to attract or tempt by offering pleasure or advantage",
+          "example": "The bakery used the smell of fresh bread to entice customers inside."
+        }
+      ]
+    },
+    {
+      "word": "genie",
+      "definition": "a spirit of Arabian folklore enclosed in a bottle or lamp and capable of granting wishes",
+      "example": "The legendary genie granted the traveler three wishes.",
+      "meanings": [
+        {
+          "definition": "a spirit of Arabian folklore enclosed in a bottle or lamp and capable of granting wishes",
+          "example": "The legendary genie granted the traveler three wishes."
+        }
+      ]
+    },
+    {
+      "word": "mince",
+      "definition": "to cut or chop into very small pieces; to walk with short, quick steps in an affectedly dainty manner",
+      "example": "Please mince the garlic before adding it to the pan.; She saw him mince across the polished hall.",
+      "meanings": [
+        {
+          "definition": "to cut or chop into very small pieces",
+          "example": "Please mince the garlic before adding it to the pan."
+        },
+        {
+          "definition": "to walk with short, quick steps in an affectedly dainty manner",
+          "example": "She saw him mince across the polished hall."
+        }
+      ]
+    },
+    {
+      "word": "tinge",
+      "definition": "a slight trace or quality of a color, feeling, or attribute; to color slightly or infuse with a quality",
+      "example": "There was a tinge of regret in her voice.; The sunset tinged the sky with orange and pink.",
+      "meanings": [
+        {
+          "definition": "a slight trace or quality of a color, feeling, or attribute",
+          "example": "There was a tinge of regret in her voice."
+        },
+        {
+          "definition": "to color slightly or infuse with a quality",
+          "example": "The sunset tinged the sky with orange and pink."
+        }
+      ]
+    },
+    {
+      "word": "cent",
+      "definition": "a monetary unit equal to one hundredth of a dollar",
+      "example": "He didn't have a single cent left in his pocket.",
+      "meanings": [
+        {
+          "definition": "a monetary unit equal to one hundredth of a dollar",
+          "example": "He didn't have a single cent left in his pocket."
+        }
+      ]
+    },
+    {
+      "word": "cite",
+      "definition": "to quote or refer to as evidence or an authority; to officially praise someone for brave or notable action; to summon someone to appear in a court of law",
+      "example": "Be sure to cite your sources in the research paper.; The officer was cited for bravery during the rescue operation.; He was cited for a traffic violation.",
+      "meanings": [
+        {
+          "definition": "to quote or refer to as evidence or an authority",
+          "example": "Be sure to cite your sources in the research paper."
+        },
+        {
+          "definition": "to officially praise someone for brave or notable action",
+          "example": "The officer was cited for bravery during the rescue operation."
+        },
+        {
+          "definition": "to summon someone to appear in a court of law",
+          "example": "He was cited for a traffic violation."
+        }
+      ]
+    },
+    {
+      "word": "emit",
+      "definition": "to produce and discharge something, such as light, sound, or gas",
+      "example": "The chimney began to emit thick black smoke.",
+      "meanings": [
+        {
+          "definition": "to produce and discharge something, such as light, sound, or gas",
+          "example": "The chimney began to emit thick black smoke."
+        }
+      ]
+    },
+    {
+      "word": "gene",
+      "definition": "a unit of heredity transferred from parent to offspring",
+      "example": "Eye color is determined by more than one gene.",
+      "meanings": [
+        {
+          "definition": "a unit of heredity transferred from parent to offspring",
+          "example": "Eye color is determined by more than one gene."
+        }
+      ]
+    },
+    {
+      "word": "gent",
+      "definition": "a gentleman",
+      "example": "He was known to everyone as a kind and polite gent.",
+      "meanings": [
+        {
+          "definition": "a gentleman",
+          "example": "He was known to everyone as a kind and polite gent."
+        }
+      ]
+    },
+    {
+      "word": "item",
+      "definition": "an individual article or unit in a list, group, or collection",
+      "example": "This item is currently out of stock.",
+      "meanings": [
+        {
+          "definition": "an individual article or unit in a list, group, or collection",
+          "example": "This item is currently out of stock."
+        }
+      ]
+    },
+    {
+      "word": "mice",
+      "definition": "small rodents with pointed snouts and long tails",
+      "example": "The cat chased the mice across the kitchen floor.",
+      "meanings": [
+        {
+          "definition": "small rodents with pointed snouts and long tails",
+          "example": "The cat chased the mice across the kitchen floor."
+        }
+      ]
+    },
+    {
+      "word": "mien",
+      "definition": "a person's look or manner, especially indicating character or mood",
+      "example": "She maintained a calm and confident mien throughout the interview.",
+      "meanings": [
+        {
+          "definition": "a person's look or manner, especially indicating character or mood",
+          "example": "She maintained a calm and confident mien throughout the interview."
+        }
+      ]
+    },
+    {
+      "word": "mine",
+      "definition": "belonging to or associated with the speaker; an excavation in the earth for extracting coal or minerals; to extract valuable minerals from the earth",
+      "example": "That book on the table is mine.; He worked underground in a gold mine.; They mine iron ore in the northern hills.",
+      "meanings": [
+        {
+          "definition": "belonging to or associated with the speaker",
+          "example": "That book on the table is mine."
+        },
+        {
+          "definition": "an excavation in the earth for extracting coal or minerals",
+          "example": "He worked underground in a gold mine."
+        },
+        {
+          "definition": "to extract valuable minerals from the earth",
+          "example": "They mine iron ore in the northern hills."
+        }
+      ]
+    },
+    {
+      "word": "mite",
+      "definition": "a minute arachnid related to ticks; a small child or creature; a very small amount",
+      "example": "Dust mites are a common cause of household allergies.; The poor little mite looked cold and hungry.; She added a mite of salt to the soup.",
+      "meanings": [
+        {
+          "definition": "a minute arachnid related to ticks",
+          "example": "Dust mites are a common cause of household allergies."
+        },
+        {
+          "definition": "a small child or creature",
+          "example": "The poor little mite looked cold and hungry."
+        },
+        {
+          "definition": "a very small amount",
+          "example": "She added a mite of salt to the soup."
+        }
+      ]
+    },
+    {
+      "word": "nice",
+      "definition": "pleasant, agreeable, or satisfactory; kind, polite, or friendly",
+      "example": "We had a very nice time at the park today.; It was very nice of you to help them move.",
+      "meanings": [
+        {
+          "definition": "pleasant, agreeable, or satisfactory",
+          "example": "We had a very nice time at the park today."
+        },
+        {
+          "definition": "kind, polite, or friendly",
+          "example": "It was very nice of you to help them move."
+        }
+      ]
+    },
+    {
+      "word": "teem",
+      "definition": "to be full of or swarming with something",
+      "example": "The streets teem with activity during the festival.",
+      "meanings": [
+        {
+          "definition": "to be full of or swarming with something",
+          "example": "The streets teem with activity during the festival."
+        }
+      ]
+    },
+    {
+      "word": "teen",
+      "definition": "a teenager",
+      "example": "The novel is popular among teens and young adults.",
+      "meanings": [
+        {
+          "definition": "a teenager",
+          "example": "The novel is popular among teens and young adults."
+        }
+      ]
+    },
+    {
+      "word": "time",
+      "definition": "the indefinite continued progress of existence and events; a point of time measured in hours and minutes; to plan or measure when an action happens",
+      "example": "Time passes quickly when you are having fun.; What time does the movie start?; She managed to time her arrival perfectly.",
+      "meanings": [
+        {
+          "definition": "the indefinite continued progress of existence and events",
+          "example": "Time passes quickly when you are having fun."
+        },
+        {
+          "definition": "a point of time measured in hours and minutes",
+          "example": "What time does the movie start?"
+        },
+        {
+          "definition": "to plan or measure when an action happens",
+          "example": "She managed to time her arrival perfectly."
+        }
+      ]
+    },
+    {
+      "word": "tine",
+      "definition": "a prong or sharp point, such as on a fork or antler",
+      "example": "One tine of the plastic fork broke off in the salad.",
+      "meanings": [
+        {
+          "definition": "a prong or sharp point, such as on a fork or antler",
+          "example": "One tine of the plastic fork broke off in the salad."
+        }
+      ]
+    }
+  ]
+}

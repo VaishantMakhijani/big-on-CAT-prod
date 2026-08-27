@@ -8,6 +8,7 @@ import { QuizModal } from './components/QuizModal';
 import { AnalyticsModal } from './components/AnalyticsModal';
 import { QuestionTimerModal } from './components/QuestionTimerModal';
 import { PdfViewerModal } from './components/PdfViewerModal';
+import { WordPowerModal } from './components/WordPowerModal';
 import {
   UserSettings,
   StudyBook,
@@ -40,6 +41,8 @@ export default function App() {
   const [showAnalytics, setShowAnalytics] = useState(false);
   const [showTimer, setShowTimer] = useState(false);
   const [viewingPdfBook, setViewingPdfBook] = useState<StudyBook | null>(null);
+  // Add this near other modal states (around line 30)
+  const [showWordPower, setShowWordPower] = useState(false);
 
   // Quiz Modal State
   const [showQuizModal, setShowQuizModal] = useState(false);
@@ -232,6 +235,7 @@ export default function App() {
           onOpenSettings={() => setShowSettings(true)}
           onOpenAnalytics={() => setShowAnalytics(true)}
           onStartQuiz={handleStartQuiz}
+          onOpenWordPower={() => setShowWordPower(true)}   // <-- add this
         />
       </main>
 
@@ -327,6 +331,12 @@ export default function App() {
           onClose={() => setViewingPdfBook(null)}
         />
       )}
+
+      {showWordPower && (
+        <WordPowerModal onClose={() => setShowWordPower(false)} />
+      )}
+
+
     </div>
   );
 }
