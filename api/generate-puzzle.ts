@@ -4,7 +4,7 @@ import { GoogleGenAI } from "@google/genai";
 import fs from 'fs';
 import path from 'path';
 
-// 3. Read the small words file
+// Read the small words file (Runs when the function first loads)
 const csvPath = path.join(process.cwd(), 'api', 'words.csv');
 const fileContent = fs.readFileSync(csvPath, 'utf-8');
 const lines = fileContent.split('\n');
@@ -16,30 +16,22 @@ const wordsList: string[] = [];
 for (let i = startIndex; i < lines.length; i++) {
   const line = lines[i].trim();
   if (!line) continue;
-  
   // FIXED: Split on commas OR tabs (using Regular Expression)
   const parts = line.split(/[,\t]/); 
   let word = parts[0].trim().toLowerCase();
-  
-  // Remove quotes if present
-  if (word.startsWith('"') && word.endsWith('"')) {
-    word = word.slice(1, -1);
-  }
-  
-  // Only keep 9-letter valid words
+  if (word.startsWith('"') && word.endsWith('"')) word = word.slice(1, -1);
   if (word.length === 9 && /^[a-z]+$/.test(word)) {
     wordsList.push(word);
   }
 }
 
-// Helper: Create a frequency map of letters (from find-puzzle-words.ts)
+// Helpers
 function getLetterCountMap(word: string): Record<string, number> {
   const map: Record<string, number> = {};
   for (const char of word) map[char] = (map[char] || 0) + 1;
   return map;
 }
 
-// Helper: Check if a word can be formed (from find-puzzle-words.ts)
 function canFormWord(word: string, puzzleMap: Record<string, number>): boolean {
   const wordMap = getLetterCountMap(word);
   for (const letter in wordMap) {
@@ -48,7 +40,6 @@ function canFormWord(word: string, puzzleMap: Record<string, number>): boolean {
   return true;
 }
 
-// Helper for date
 function getTodayIST(): string {
   const now = new Date();
   const istOffset = 5.5 * 60 * 60 * 1000;
@@ -57,39 +48,44 @@ function getTodayIST(): string {
 }
 
 export default async function handler(req: any, res: any) {
-  if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
+  try {
+    if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
-  const today = getTodayIST();
-  
-  // 1. Check if puzzle already exists for today
-  const existingBlob = await head(`puzzles/${today}.json`, {
-    token: process.env.BLOB_READ_WRITE_TOKEN
-  });
+    const today = getTodayIST();
 
-  if (existingBlob) {
-    const response = await fetch(existingBlob.url);
-    const data = await response.json();
-    return res.status(200).json({ success: true, message: "Already exists", data });
-  }
+    // 1. Check if puzzle already exists for today (WRAPPED IN TRY-CATCH TO FIX 500 ERROR)
+    let existingBlob = null;
+    try {
+      existingBlob = await head(`puzzles/${today}.json`, {
+        token: process.env.BLOB_READ_WRITE_TOKEN
+      });
+    } catch (e) {
+      console.log("Blob not found for today, generating new puzzle...");
+    }
 
-  // 2. Pick a random word from the list (excluding used ones later if needed)
-  const puzzleWord = wordsList[Math.floor(Math.random() * wordsList.length)];
-  
-  // 3. Pick a central letter from the puzzle word
-  const centralLetter = puzzleWord[Math.floor(Math.random() * puzzleWord.length)];
+    if (existingBlob) {
+      const response = await fetch(existingBlob.url);
+      const data = await response.json();
+      return res.status(200).json({ success: true, message: "Already exists", data });
+    }
 
-  // 4. GENERATE VALID WORDS (Your exact find-puzzle-words logic)
-  const puzzleMap = getLetterCountMap(puzzleWord);
-  const candidates = wordsList.filter(word => {
-    if (word.length < 4 || word.length > 9) return false;
-    if (!word.includes(centralLetter)) return false;
-    return canFormWord(word, puzzleMap);
-  });
-  
-  // 5. Call Gemini with your exact cleaning prompt
-  const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    // 2. Pick a random word
+    const puzzleWord = wordsList[Math.floor(Math.random() * wordsList.length)];
+    // 3. Pick a central letter
+    const centralLetter = puzzleWord[Math.floor(Math.random() * puzzleWord.length)];
 
-  const SYSTEM_PROMPT = `
+    // 4. Generate valid words
+    const puzzleMap = getLetterCountMap(puzzleWord);
+    const candidates = wordsList.filter(word => {
+      if (word.length < 4 || word.length > 9) return false;
+      if (!word.includes(centralLetter)) return false;
+      return canFormWord(word, puzzleMap);
+    });
+
+    // 5. Call Gemini (YOUR EXACT FILTRATION PROMPT IS HERE)
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+
+    const SYSTEM_PROMPT = `
   You are a lexicographer for The Guardian's Word Wheel puzzle.
   I will provide a JSON array of candidate words.
   The mandatory central letter is "${centralLetter.toUpperCase()}".
@@ -128,27 +124,32 @@ export default async function handler(req: any, res: any) {
     Usage: "She leaned against the railing; The company had to survive on a lean budget."
   `;
 
-  const responseGemini = await ai.models.generateContent({
-    model: "gemini-2.5-flash", // Updated to a reliable model
-    contents: `${SYSTEM_PROMPT}\n\nHere is the list of candidate words:\n${JSON.stringify(candidates)}`,
-    config: { responseMimeType: "application/json" },
-  });
+    const responseGemini = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: `${SYSTEM_PROMPT}\n\nHere is the list of candidate words:\n${JSON.stringify(candidates)}`,
+      config: { responseMimeType: "application/json" },
+    });
 
-  const cleanedWords = JSON.parse(responseGemini.text || '[]');
+    const cleanedWords = JSON.parse(responseGemini.text || '[]');
 
-  // 6. Save the final puzzle to Blob
-  const puzzleData = {
-    puzzleWord,
-    centralLetter,
-    generatedDate: today,
-    words: cleanedWords
-  };
+    // 6. Save the final puzzle to Blob
+    const puzzleData = {
+      puzzleWord,
+      centralLetter,
+      generatedDate: today,
+      words: cleanedWords
+    };
 
-  await put(`puzzles/${today}.json`, JSON.stringify(puzzleData), {
-    access: 'private',
-    addRandomSuffix: false,
-    token: process.env.BLOB_READ_WRITE_TOKEN
-  });
+    await put(`puzzles/${today}.json`, JSON.stringify(puzzleData), {
+      access: 'private',
+      addRandomSuffix: false,
+      token: process.env.BLOB_READ_WRITE_TOKEN
+    });
 
-  res.status(200).json({ success: true, data: puzzleData });
+    res.status(200).json({ success: true, data: puzzleData });
+
+  } catch (error: any) {
+    console.error("FULL ERROR:", error);
+    res.status(500).json({ error: error.message });
+  }
 }
