@@ -1,7 +1,13 @@
 // api/generate-puzzle.ts
 import { put, head } from '@vercel/blob';
 import { GoogleGenAI } from "@google/genai";
-import wordsList from './words.json';
+import fs from 'fs';
+import path from 'path';
+
+// Read the file at runtime instead of importing it directly
+const wordsPath = path.join(process.cwd(), 'api', 'words.json');
+const wordsList: string[] = JSON.parse(fs.readFileSync(wordsPath, 'utf-8'));
+
 
 // Helper: Create a frequency map of letters (from find-puzzle-words.ts)
 function getLetterCountMap(word: string): Record<string, number> {
