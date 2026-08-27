@@ -7,5 +7,10 @@
       "path": "/api/generate-puzzle",
       "schedule": "30 18 * * *"
     }
-  ]
+  ],
+  "functions": {
+    "api/generate-puzzle.ts": {
+      "includeFiles": "api/words.csv"
+    }
+  }
 }
