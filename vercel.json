@@ -3,3 +3,11 @@
     { "source": "/(.*)", "destination": "/" }
   ]
 }
+{
+  "crons": [
+    {
+      "path": "/api/generate-puzzle",
+      "schedule": "30 18 * * *"
+    }
+  ]
+}
