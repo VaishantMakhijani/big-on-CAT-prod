@@ -10,7 +10,7 @@
   ],
   "functions": {
     "api/generate-puzzle.ts": {
-      "includeFiles": "api/words.csv"
+      "includeFiles": "api/words.csv, api/dictionary.json"
     }
   }
 }
