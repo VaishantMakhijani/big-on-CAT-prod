@@ -1,9 +1,7 @@
 {
   "rewrites": [
     { "source": "/(.*)", "destination": "/" }
-  ]
-}
-{
+  ],
   "crons": [
     {
       "path": "/api/generate-puzzle",
