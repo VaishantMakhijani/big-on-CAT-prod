@@ -31,7 +31,7 @@
     "recharts": "^3.10.1",
     "rss-parser": "^3.13.0",
     "wordnet": "^2.0.0",
-    "@vercel/blob": "^1.2.0"
+    "@vercel/blob": "latest"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
