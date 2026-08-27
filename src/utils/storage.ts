@@ -5,6 +5,7 @@ import {
   ReadingSession,
   QuestionAttempt,
   QuestionTimerLap,
+  WordPowerProgress,
 } from '../types';
 import { storePdfData, removePdfData } from './pdfStorage';
 
@@ -372,4 +373,23 @@ export const addTimerLap = (setNumber: number, questionNum: number, durationSec:
 
 export const clearTimerLaps = (): void => {
   localStorage.removeItem(KEYS.TIMER_LOGS);
+};
+
+// --- Word Power ---
+const WP_PROGRESS_KEY = 'wordpower_progress';
+
+export const getWordPowerProgress = (): WordPowerProgress | null => {
+  try {
+    const data = localStorage.getItem(WP_PROGRESS_KEY);
+    if (data) return JSON.parse(data);
+  } catch (e) { /* ignore */ }
+  return null;
+};
+
+export const saveWordPowerProgress = (progress: WordPowerProgress): void => {
+  localStorage.setItem(WP_PROGRESS_KEY, JSON.stringify(progress));
+};
+
+export const clearWordPowerProgress = (): void => {
+  localStorage.removeItem(WP_PROGRESS_KEY);
 };
