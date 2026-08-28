@@ -82,15 +82,15 @@ export default async function handler(req: any, res: any) {
     const puzzleWord = "appealing"; // TEMPORARILY HARDCODED FOR TESTING
     
     // Pick a preferred central letter (vowels or L, N, R, S, T)
-    const preferredLetters = ['a', 'e', 'i', 'o', 'u', 'l', 'n', 'r', 's', 't'];
-    let centralLetter = puzzleWord[Math.floor(Math.random() * puzzleWord.length)];
-    if (!preferredLetters.includes(centralLetter)) {
-        const preferred = puzzleWord.split('').filter(char => preferredLetters.includes(char));
-        if (preferred.length > 0) {
-            centralLetter = preferred[Math.floor(Math.random() * preferred.length)];
-        }
-    }
-    centralLetter = 'n'; //replace later
+    //const preferredLetters = ['a', 'e', 'i', 'o', 'u', 'l', 'n', 'r', 's', 't'];
+    //let centralLetter = puzzleWord[Math.floor(Math.random() * puzzleWord.length)];
+    //if (!preferredLetters.includes(centralLetter)) {
+    //    const preferred = puzzleWord.split('').filter(char => preferredLetters.includes(char));
+    //    if (preferred.length > 0) {
+    //        centralLetter = preferred[Math.floor(Math.random() * preferred.length)];
+    //    }
+    //}
+    const centralLetter = 'n'; //replace later
 
     const puzzleMap = getLetterCountMap(puzzleWord);
     const candidates = fullDictionary.filter(word => {
