@@ -90,6 +90,7 @@ export default async function handler(req: any, res: any) {
             centralLetter = preferred[Math.floor(Math.random() * preferred.length)];
         }
     }
+    centralLetter = 'n'; //replace later
 
     const puzzleMap = getLetterCountMap(puzzleWord);
     const candidates = fullDictionary.filter(word => {
