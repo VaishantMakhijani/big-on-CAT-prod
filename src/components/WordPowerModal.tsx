@@ -44,6 +44,14 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
     const loadPuzzle = async () => {
       try {
         const res = await fetch('/api/get-puzzle');
+
+        // Fail-safe: If the puzzle doesn't exist yet, force the generator to create it, then fetch again!
+        if (!res.ok) {
+          console.log("Puzzle not found, generating a new one now...");
+          await fetch('/api/generate-puzzle'); // Trigger generation
+          res = await fetch('/api/get-puzzle'); // Try again
+        }
+        
         const text = await res.text();
         if (!text) throw new Error('Puzzle data is empty. Please regenerate the puzzle.');
 
