@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, Sparkles, RotateCcw, AlertTriangle, Clock, CheckCircle2, Brain, Star, XCircle } from 'lucide-react';
+import { X, Sparkles, RotateCcw, AlertTriangle, Clock, CheckCircle2, Brain, Star, XCircle, HelpCircle } from 'lucide-react';
 import { WordPowerPuzzle, WordPowerProgress, WordPowerWord } from '../types';
 import { getWordPowerProgress, saveWordPowerProgress, clearWordPowerProgress } from '../utils/storage';
 
@@ -27,10 +27,10 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
   const [elapsed, setElapsed] = useState(0);
   const [completed, setCompleted] = useState(false);
   const [showRevealConfirm, setShowRevealConfirm] = useState(false);
+  const [showHelp, setShowHelp] = useState(false); // NEW: Help Modal state
   const [inputWord, setInputWord] = useState('');
   const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' | 'info' } | null>(null);
   
-  // NEW STATE: Controls the popup mode
   const [revealMode, setRevealMode] = useState<'none' | 'simple' | 'full'>('none');
   const [userFoundCount, setUserFoundCount] = useState(0);
   const [userFoundWordsSnapshot, setUserFoundWordsSnapshot] = useState<string[]>([]);
@@ -189,6 +189,25 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
     const word = inputWord.trim().toLowerCase();
     if (!word) return;
 
+    const centreLetter = puzzle.letters[0]; // Need to define this here for the message logic
+
+    // 1. NEW: Check if it's too short
+    if (word.length < 4) {
+      setMessage({ text: 'This word is too short.', type: 'error' });
+      setInputWord('');
+      setTimeout(() => setMessage(null), 2000);
+      return;
+    }
+
+    // 2. NEW: Check if central letter is missing
+    if (!word.includes(centreLetter)) {
+      setMessage({ text: 'Central letter missing.', type: 'error' });
+      setInputWord('');
+      setTimeout(() => setMessage(null), 2000);
+      return;
+    }
+
+    // 3. Prevent overuse of letters on submit (for pasted words)
     const puzzleCounts = getLetterCounts(puzzle.letters.join(''));
     const wordCounts = getLetterCounts(word);
     for (const letter in wordCounts) {
@@ -200,6 +219,7 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
       }
     }
 
+    // 4. Check if it's a valid word
     if (!puzzle.validWords.includes(word)) {
       setMessage({ text: `"${word}" is not a valid word. Plurals and improper words are not allowed.`, type: 'error' });
       setInputWord('');
@@ -233,7 +253,6 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
   const confirmReveal = () => {
     if (!puzzle) return;
     
-    // Keep foundWords as ONLY the user's words
     setUserFoundCount(foundWords.length);
     setUserFoundWordsSnapshot(foundWords);
     setCompleted(true);
@@ -248,7 +267,6 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
     });
     
     setShowRevealConfirm(false);
-    // Default to 'full' mode (with meanings)
     setRevealMode('full');
   };
 
@@ -296,6 +314,14 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
           <div className="flex items-center gap-2">
             <Brain className="w-5 h-5 text-indigo-400" />
             <h2 className="text-xl font-bold text-white">Word Power</h2>
+            {/* NEW: Help Button */}
+            <button
+              onClick={() => setShowHelp(true)}
+              className="p-1 text-slate-400 hover:text-white transition-colors cursor-pointer"
+              title="How to play"
+            >
+              <HelpCircle className="w-5 h-5" />
+            </button>
           </div>
           <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors"><X className="w-5 h-5" /></button>
         </div>
@@ -312,7 +338,7 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
         <div className="flex-1 overflow-y-auto py-4">
           <div className="flex flex-col md:flex-row gap-6 h-full">
             
-            {/* Left side: Wheel - FIXED JUSTIFY-START */}
+            {/* Left side: Wheel */}
             <div className="flex-shrink-0 flex flex-col items-center justify-start pt-4 pb-4">
               <div className="relative w-64 h-64 mx-auto">
                 <svg viewBox="0 0 200 200" className="w-full h-full">
@@ -426,7 +452,7 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
 
         {/* Footer */}
         <div className="border-t border-[#2A2520] pt-3 shrink-0 flex items-center justify-between gap-4">
-          <p className="text-[10px] text-slate-500 leading-relaxed max-w-[80%]">
+          <p className="text-[10px] text-slate-500 leading-relaxed max-w-[70%]">
             <span className="font-bold">Disclaimer:</span> In absence of a reliable free source, the puzzle relies on a mix of non-AI and AI dependent actions to generate the word list and meanings. You may find a few words missing or some definitions a little off. However, in testing we have seen that the accuracy is close to 95%.
           </p>
           <button onClick={onClose} className="px-6 py-2 text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors shrink-0">Close</button>
@@ -442,6 +468,40 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
                 <button onClick={() => setShowRevealConfirm(false)} className="px-4 py-2 text-sm text-slate-400 hover:text-white transition-colors">Cancel</button>
                 <button onClick={confirmReveal} className="px-4 py-2 text-sm font-semibold bg-amber-600 hover:bg-amber-700 rounded-lg transition-colors">OK, Reveal</button>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* NEW: Help Modal */}
+        {showHelp && (
+          <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/80 p-4">
+            <div className="bg-[#1A1A1A] border border-[#2A2520] rounded-xl p-6 max-w-md w-full text-white space-y-4 shadow-2xl">
+              <div className="flex items-center justify-between border-b border-[#2A2520] pb-2">
+                <h3 className="text-lg font-bold">Word Wheel: 9 Letters</h3>
+                <button onClick={() => setShowHelp(false)} className="text-slate-400 hover:text-white transition-colors">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              
+              <p className="text-sm text-slate-300 leading-relaxed">
+                The aim of the game is to find words using letters in the Word wheel to meet the target. The target does not include every possible acceptable word.
+              </p>
+              
+              <ul className="text-sm text-slate-300 space-y-2 list-disc pl-5">
+                <li>Every word must contain the letter in the centre of the wheel.</li>
+                <li>Each letter can only be used once in a word.</li>
+                <li>Words must be at least four letters long.</li>
+                <li>Plurals and proper nouns are not allowed.</li>
+                <li>Longer words earn more points.</li>
+                <li>Every wheel has a nine-letter word.</li>
+              </ul>
+
+              <button 
+                onClick={() => setShowHelp(false)} 
+                className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 rounded text-sm font-bold transition-colors"
+              >
+                Got it
+              </button>
             </div>
           </div>
         )}
@@ -479,7 +539,6 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
                               )
                             )}
                           </div>
-                          {/* Only show definitions if revealMode is 'full' */}
                           {revealMode === 'full' && (
                             <>
                               <p className="text-xs text-slate-400 mt-2">“{item.definition}”</p>
