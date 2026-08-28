@@ -9,11 +9,6 @@ export default async function handler(req: any, res: any) {
       token: process.env.BLOB_READ_WRITE_TOKEN
     });
 
-    if (!existingBlob) {
-      return res.status(404).json({ error: "Puzzle not generated yet. Please try again." });
-    }
-
-    // CRITICAL: Add the Authorization header so we can fetch the private blob!
     const response = await fetch(existingBlob.url, {
       headers: {
         Authorization: `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}`
@@ -28,6 +23,8 @@ export default async function handler(req: any, res: any) {
     res.status(200).json(puzzleData);
 
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    // If the file doesn't exist yet, tell the user nicely
+    console.error("Puzzle not found:", error.message);
+    res.status(404).json({ error: "Today's puzzle isn't generated yet. Please try again shortly." });
   }
 }
