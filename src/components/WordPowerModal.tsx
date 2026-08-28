@@ -46,6 +46,19 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
         const res = await fetch('/api/get-puzzle');
         const text = await res.text();
         if (!text) throw new Error('Puzzle data is empty. Please regenerate the puzzle.');
+
+        // If the server returned an error status, show the actual error message instead of "corrupted"
+        if (!res.ok) {
+          let errorMessage = "Failed to load puzzle";
+          try {
+            const errorData = JSON.parse(text);
+            errorMessage = errorData.error || errorMessage;
+          } catch (e) {
+            // If the server sent plain text (like "Forbidden"), show it directly
+            errorMessage = text || errorMessage;
+          }
+          throw new Error(errorMessage);
+        }
         
         let rawData;
         try {
