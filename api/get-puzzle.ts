@@ -9,10 +9,16 @@ export default async function handler(req: any, res: any) {
   });
 
   if (!existingBlob) {
-    return res.status(404).json({ error: "Puzzle not generated yet. Try after 12:00 AM IST." });
+    return res.status(404).json({ error: "Puzzle not generated yet." });
   }
 
-  const response = await fetch(existingBlob.url);
+  // IMPORTANT: Add the Authorization header here!
+  const response = await fetch(existingBlob.url, {
+    headers: {
+      Authorization: `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}`
+    }
+  });
+
   const puzzleData = await response.json();
   res.status(200).json(puzzleData);
 }
