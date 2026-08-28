@@ -111,7 +111,7 @@ export default async function handler(req: any, res: any) {
   2. **Dictionary Rule:** Only accept words that are valid standard British English words, even if they are rare.
   3. **Rare but Valid Exception (CRITICAL):** Some valid words might look like proper nouns but have lowercase dictionary definitions. Do NOT remove "luna" (moth), "leat" (water channel), "manul" (wildcat), or "lutea" (botanical). Only remove words that are strictly proper nouns like "John" or "Paris".
   4. **Jargon Filter:** Remove highly specific scientific, chemical, archaic poetry, or foreign cultural jargon that a general puzzle audience would never guess (e.g., "laten", "eluant", "muleta", "tela", "tael", "ulema"). 
-  5. **Botanical/Technical Exception:** You may keep common technical, anatomical, or botanical terms (like "ulnae" or "lunate") as long as they are recognized in standard British English.
+  5. **Botanical/Technical Exception:** You may keep common technical, anatomical, or botanical terms (like "ulnae" or "lunate") as long as they are recognized in standard British English. However, exclude words that are unlikely to be known by a general audience, even if technically valid.
   6. **Output Format:** Return ONLY a JSON array formatted exactly like this:
   [
     { "word": "annul", "definition": "to declare invalid", "usage": "The contract was annulled." },
