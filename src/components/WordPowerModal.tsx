@@ -317,10 +317,9 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
             {/* NEW: Help Button */}
             <button
               onClick={() => setShowHelp(true)}
-              <span className="text-xs font-bold px-2 py-1 bg-slate-700 rounded">Help</span>)
               title="How to play"
-            >
-              <HelpCircle className="w-5 h-5" />
+              className="flex items-center gap-1 text-xs font-bold px-2 py-1 bg-slate-700 rounded hover:bg-slate-600 transition-colors cursor-pointer">
+              <HelpCircle className="w-4 h-4" /> Help
             </button>
           </div>
           <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors"><X className="w-5 h-5" /></button>
