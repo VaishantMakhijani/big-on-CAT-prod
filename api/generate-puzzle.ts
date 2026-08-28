@@ -154,7 +154,7 @@ export default async function handler(req: any, res: any) {
 
     // FIX: Ensure the blob is PUBLIC
     await put(`puzzles/${today}.json`, JSON.stringify(puzzleData), {
-      access: 'public',
+      access: 'private',
       addRandomSuffix: false,
       token: process.env.BLOB_READ_WRITE_TOKEN
     });
