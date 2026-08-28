@@ -78,7 +78,8 @@ export default async function handler(req: any, res: any) {
     }
 
     // Pick the 9-letter puzzle word
-    const puzzleWord = wordsList[Math.floor(Math.random() * wordsList.length)];
+    //const puzzleWord = wordsList[Math.floor(Math.random() * wordsList.length)];
+    const puzzleWord = "appealing"; // TEMPORARILY HARDCODED FOR TESTING
     
     // Pick a preferred central letter (vowels or L, N, R, S, T)
     const preferredLetters = ['a', 'e', 'i', 'o', 'u', 'l', 'n', 'r', 's', 't'];
