@@ -1,5 +1,3 @@
-
-
 // api/generate-puzzle.ts
 import { put, head } from '@vercel/blob';
 import { GoogleGenAI } from "@google/genai";
