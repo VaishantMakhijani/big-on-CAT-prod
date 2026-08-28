@@ -1,10 +1,11 @@
+
+
 // api/generate-puzzle.ts
 import { put, head } from '@vercel/blob';
 import { GoogleGenAI } from "@google/genai";
 import fs from 'fs';
 import path from 'path';
 
-// 1. Read the 9-letter words file (for picking the main puzzle word)
 const csvPath = path.join(process.cwd(), 'api', 'words.csv');
 const fileContent = fs.readFileSync(csvPath, 'utf-8');
 const lines = fileContent.split('\n');
@@ -22,11 +23,9 @@ for (let i = startIndex; i < lines.length; i++) {
   if (word.length === 9 && /^[a-z]+$/.test(word)) wordsList.push(word);
 }
 
-// 2. Read the FULL dictionary (for finding sub-words)
 const dictPath = path.join(process.cwd(), 'api', 'dictionary.json');
 const fullDictionary: string[] = JSON.parse(fs.readFileSync(dictPath, 'utf-8'));
 
-// Helpers
 function getLetterCountMap(word: string): Record<string, number> {
   const map: Record<string, number> = {};
   for (const char of word) map[char] = (map[char] || 0) + 1;
@@ -54,18 +53,28 @@ export default async function handler(req: any, res: any) {
 
     const today = getTodayIST();
 
-    // Check if puzzle exists
+    // Check if puzzle exists (using try-catch to handle missing blob)
     let existingBlob = null;
     try {
       existingBlob = await head(`puzzles/${today}.json`, {
         token: process.env.BLOB_READ_WRITE_TOKEN
       });
     } catch (e) {
-      console.log("Blob not found, generating...");
+      console.log("Blob not found, generating new puzzle...");
     }
 
     if (existingBlob) {
-      const response = await fetch(existingBlob.url);
+      // FIX: Authenticate the fetch request
+      const response = await fetch(existingBlob.url, {
+        headers: {
+          Authorization: `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch blob: ${response.status} ${response.statusText}`);
+      }
+
       const data = await response.json();
       return res.status(200).json({ success: true, message: "Already exists", data });
     }
@@ -83,7 +92,6 @@ export default async function handler(req: any, res: any) {
         }
     }
 
-    // 3. GENERATE CANDIDATES USING THE FULL DICTIONARY!
     const puzzleMap = getLetterCountMap(puzzleWord);
     const candidates = fullDictionary.filter(word => {
       if (word.length < 4 || word.length > 9) return false;
@@ -91,7 +99,6 @@ export default async function handler(req: any, res: any) {
       return canFormWord(word, puzzleMap);
     });
 
-    // 4. Call Gemini...
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
     const SYSTEM_PROMPT = `
   You are a lexicographer for The Guardian's Word Wheel puzzle.
@@ -147,8 +154,9 @@ export default async function handler(req: any, res: any) {
       words: cleanedWords
     };
 
+    // FIX: Ensure the blob is PUBLIC
     await put(`puzzles/${today}.json`, JSON.stringify(puzzleData), {
-      access: 'private',
+      access: 'public',
       addRandomSuffix: false,
       token: process.env.BLOB_READ_WRITE_TOKEN
     });
