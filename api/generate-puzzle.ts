@@ -165,8 +165,8 @@ export default async function handler(req: any, res: any) {
   1. Did any plural nouns whose singulars are present (e.g., "miles", "males", "lakes") slip through? If so, REMOVE them.
   2. Did any chemical, equestrian, archaic, or regional slang words (like "haem", "hame", "leas", "sheila") slip through? If so, REMOVE them.
   3. Did you include all primary noun/verb senses for common words like "shake", "like", "semi", and "seal"?
-  \`;
-
+  `;
+    
     const responseGemini = await ai.models.generateContent({
       model: "gemini-3.6-flash",
       contents: `${SYSTEM_PROMPT}\n\nHere is the list of candidate words:\n${JSON.stringify(candidates)}`,
