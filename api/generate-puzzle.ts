@@ -102,43 +102,70 @@ export default async function handler(req: any, res: any) {
 
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
     const SYSTEM_PROMPT = `
-  You are a lexicographer for The Guardian's Word Wheel puzzle.
-  I will provide a JSON array of candidate words.
-  The mandatory central letter is "${centralLetter.toUpperCase()}".
-
-  DICTIONARY AUTHORITY:
-  Use the Collins English Dictionary (Standard British English) as your sole authority. Use UK spellings.
-
-  PLEASE FOLLOW THESE RULES STRICTLY:
-  1. **Mandatory Letter Rule:** All words MUST contain the letter "${centralLetter.toUpperCase()}".
-  2. **Dictionary Rule:** Only accept words that are valid standard British English words, even if they are rare.
-  3. **Rare but Valid Exception (CRITICAL):** Some valid words might look like proper nouns but have lowercase dictionary definitions. Do NOT remove "luna" (moth), "leat" (water channel), "manul" (wildcat), or "lutea" (botanical). Only remove words that are strictly proper nouns like "John" or "Paris".
-  4. **Jargon Filter:** Remove highly specific scientific, chemical, archaic poetry, or foreign cultural jargon that a general puzzle audience would never guess (e.g., "laten", "eluant", "muleta", "tela", "tael", "ulema"). 
-  5. **Botanical/Technical Exception:** You may keep common technical, anatomical, or botanical terms (like "ulnae" or "lunate") as long as they are recognized in standard British English. However, exclude words that are unlikely to be known by a general audience, even if technically valid.
-  6. **Output Format:** Return ONLY a JSON array formatted exactly like this:
-  [
-    { "word": "annul", "definition": "to declare invalid", "usage": "The contract was annulled." },
-    { "word": "lutea", "definition": "a yellow pigment", "usage": "The flower is known for its lutea color." }
-  ]
-  - Output ONLY the JSON array. Do NOT use markdown code blocks or any other text.
-  - The "word" must match the input word exactly.
-
-  7. **CRITICAL - DEFINITION QUALITY CONTROL:**
-  - **FORBIDDEN:** You are strictly FORBIDDEN from returning definitions that are just grammatical rules. 
-    - DO NOT say: "past tense of X", "plural of X", "third person singular of X", "present participle of X", or "a form of X".
-  - **REQUIRED:** You MUST provide a clear, standalone, dictionary-style definition that explains the actual object, concept, or action in plain English, so a casual puzzle player can understand it.
-  - **EXAMPLES OF BAD DEFINITIONS (DO NOT COPY):**
-    - "leant": "past tense and past participle of lean" -> **BAD**
-    - "ulnae": "plural form of ulna" -> **BAD**
-  - **EXAMPLES OF GOOD DEFINITIONS (USE THIS STYLE):**
-    - "leant": "to have rested your body against something for support" (Usage: "He leant against the wall.")
-    - "ulnae": "the two long bones located on the inner side of the human forearm" (Usage: "Both of the patient's ulnae were examined.")
-
-  8. **MULTIPLE MEANINGS (CRITICAL):** If a word has multiple distinct, common meanings (e.g., "lean" as a verb meaning to incline, AND as an adjective meaning thin), you MUST include ALL major meanings in the "definition" field, separated by a semicolon (;). Ensure the meanings are clear and understandable to a general audience.
-  - **EXAMPLE FOR "lean":**
-    Definition: "to incline or rest against something; also, having very little fat or substance (as in lean meat or a lean budget)"
-    Usage: "She leaned against the railing; The company had to survive on a lean budget."
-  `;
+    You are a master lexicographer for The Guardian's Word Wheel puzzle.
+    I will provide a JSON array of candidate words.
+    The mandatory central letter is "${centralLetter.toUpperCase()}".
+  
+    DICTIONARY AUTHORITY:
+    Use the Collins English Dictionary (Standard British English) as your sole authority. Use UK spellings throughout.
+  
+    PLEASE FOLLOW THESE RULES STRICTLY:
+  
+    1. MANDATORY LETTER RULE:
+    - Every word MUST contain the mandatory central letter "${centralLetter.toUpperCase()}".
+  
+    2. THE "GUARDIAN NEWSPAPER" READABILITY TEST (CRITICAL):
+    Every accepted word must pass this test: "Would an educated, general reader of a mainstream UK broadsheet recognize this word in standard prose without consulting a specialist dictionary?"
+    - EXCLUDE the following categories:
+      * Chemical / Biochemical / Medical compounds (e.g., discard "haem", "eluant").
+      * Obscure agricultural, equestrian, or heraldic equipment (e.g., discard "hame", "surcingle").
+      * Archaic, obsolete, or historical poetic words not in common modern use (e.g., discard "leas", "laten", "oft").
+      * Non-UK regional slang or colloquial proper-noun nicknames (e.g., discard Australian slang like "sheila").
+      * Proper nouns, place names, and capitalized personal names.
+    - KEEP: Standard everyday words, widely recognized botanical/zoological terms, and common technical words an educated reader would know (e.g., "ulna", "isle", "kale").
+  
+    3. ZERO PLURALS (CRITICAL):
+    - If a word is a plural noun (e.g., "males", "miles", "hikes", "hakes", "lakes", "meals"), AND the base singular noun (e.g., "male", "mile", "hike", "hake", "lake", "meal") is also valid, you MUST return ONLY the singular word.
+    - Strictly EXCLUDE the plural form.
+    - Exception: If the word ending in 's' is primarily a 3rd-person singular verb (e.g., "heals", "makes") where the base form has a distinct primary verb meaning, or if the plural form has an independent, unique meaning not captured by the singular (e.g., "arms" as weapons vs "arm" as a limb), you may evaluate it accordingly. When in doubt, prefer the root/base lemma.
+  
+    4. DEFINITION QUALITY CONTROL (NO GRAMMATICAL COPIES):
+    - FORBIDDEN: Do NOT write definitions that merely state grammar rules (e.g., DO NOT say "past tense of X", "plural of X", "third-person singular of X", or "a form of X").
+    - REQUIRED: Provide an engaging, standalone, dictionary-style definition explaining the concept, object, or action clearly in plain English.
+  
+    5. MULTIPLE MEANINGS & HOMOGRAPHS (CRITICAL):
+    For every word, you MUST perform a multi-sense audit before writing the definition:
+    - Check for distinct Noun vs. Verb meanings (e.g., "shake" as a physical motion vs. a cold beverage).
+    - Check for completely unrelated homographs/domains (e.g., "seal" as an animal vs. an official stamp vs. a watertight barrier).
+    - If a word has multiple common meanings, you MUST list all major definitions separated by a semicolon (;), and provide a matching multi-part usage sentence.
+  
+    6. OUTPUT FORMAT:
+    Return ONLY a valid JSON array matching the exact structure below. Do not wrap it in parent objects (no {"success": true...}) and do not add any surrounding text or markdown wrappers beyond the array:
+  
+    [
+      {
+        "word": "seal",
+        "definition": "a fish-eating aquatic mammal with flippers; an embossed design, stamp, or piece of wax used to authenticate a document; a tight closure preventing the escape of liquid or gas",
+        "usage": "A seal surfaced near the dock; the royal decree bore the king's seal; ensure the rubber seal on the jar is intact."
+      },
+      {
+        "word": "semi",
+        "definition": "an informal term for a semi-detached house; a semi-final match or round in a competition; a large articulated lorry",
+        "usage": "They bought a 1930s semi in London; the team qualified for the semi; the motorway lane was blocked by a semi."
+      },
+      {
+        "word": "lean",
+        "definition": "to incline, bend, or rest against something for support; containing little or no fat; sparse or producing little",
+        "usage": "He leaned against the mantelpiece; choose lean cuts of meat; the company survived a lean financial year."
+      }
+    ]
+  
+    7. PRE-OUTPUT AUDIT:
+    Before finalizing your output, review every word in your candidate list:
+    1. Did any plural nouns whose singulars are present (e.g., "miles", "males", "lakes") slip through? If so, REMOVE them.
+    2. Did any chemical, equestrian, archaic, or regional slang words (like "haem", "hame", "leas", "sheila") slip through? If so, REMOVE them.
+    3. Did you include all primary noun/verb senses for common words like "shake", "like", "semi", and "seal"?
+    \`;
 
     const responseGemini = await ai.models.generateContent({
       model: "gemini-3.6-flash",
