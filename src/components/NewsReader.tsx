@@ -49,10 +49,10 @@ export const NewsReader: React.FC<NewsReaderProps> = ({
   const [lastSynced, setLastSynced] = useState<string>('Never synced');
   const [syncStatus, setSyncStatus] = useState('Intelligence feed segregated by domain.');
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
-    'Business & Economics': true,
-    'Science & Technology': true,
-    'Philosophy & Psychology': true,
-    'History • Society • Culture': true,
+    'Business & Economics': false,
+    'Science & Technology': false,
+    'Philosophy & Psychology': false,
+    'History • Society • Culture': false,
   });
 
   // Reading Timer state
@@ -365,7 +365,7 @@ export const NewsReader: React.FC<NewsReaderProps> = ({
           ) : (
             CATEGORY_NAMES.map((catName) => {
               const catArticles = categories[catName] || [];
-              const isExpanded = expandedCategories[catName] ?? true;
+              const isExpanded = expandedCategories[catName] ?? false;
 
               return (
                 <div
