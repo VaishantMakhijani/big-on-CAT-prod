@@ -216,7 +216,7 @@ export default function App() {
       </div>
 
       {/* Left Navigation Sidebar */}
-      <div className={`flex-1 lg:flex-none ${mobileTab === 'study' ? 'block' : 'hidden'} lg:block h-full overflow-hidden`}>
+      <div className={`flex-1 lg:flex-none ${mobileTab === 'study' ? 'block' : 'hidden'} lg:block h-full overflow-hidden hidden lg:block`}>
         <Sidebar
           books={books}
           tasks={tasks}

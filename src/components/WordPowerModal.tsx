@@ -500,7 +500,7 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
                 <li>Words must be at least four letters long.</li>
                 <li>Plurals and proper nouns are not allowed.</li>
                 <li>Longer words earn more points.</li>
-                <li>Every wheel has a nine-letter word.</li>
+                <li>Every wheel has one nine-letter word to be identified.</li>
               </ul>
 
               <button 
