@@ -353,7 +353,16 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
           <div className="flex flex-col md:flex-row gap-6 h-full">
             
             {/* Left side: Wheel */}
-            <div className="flex-shrink-0 flex flex-col items-center justify-start pt-4 pb-4">
+            <div className="flex-shrink-0 flex flex-col items-center justify-start pt-4 pb-4 relative">
+              {/* ADD THIS: Re-shuffle Button moved to TOP LEFT */}
+              <button 
+                onClick={handleShuffle} 
+                className="absolute -top-2 -left-2 z-10 flex items-center justify-center gap-2 px-3 py-2 bg-[#2A2520] hover:bg-[#3A3530] text-white text-xs font-semibold rounded-lg transition-colors cursor-pointer"
+              >
+                <RotateCcw className="w-3 h-3" /> Re-shuffle
+              </button>
+
+
               <div className="relative w-64 h-64 mx-auto">
                 <svg viewBox="0 0 200 200" className="w-full h-full">
                   {outerLetters.map((letter, idx) => {
@@ -380,9 +389,6 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
                 <p className="text-center text-[10px] text-slate-500 mt-2">
                   Every word must contain central letter <span className="text-indigo-400 font-bold">{centreLetter.toUpperCase()}</span>
                 </p>
-                <button onClick={handleShuffle} className="mt-4 mx-auto flex items-center justify-center gap-2 px-4 py-2 bg-[#2A2520] hover:bg-[#3A3530] text-white text-xs font-semibold rounded-lg transition-colors cursor-pointer">
-                  <RotateCcw className="w-3 h-3" /> Re-shuffle Letters
-                </button>
               </div>
             </div>
 
