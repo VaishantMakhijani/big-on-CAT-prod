@@ -296,7 +296,7 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
 
   if (loading) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-2 sm:p-4">
         <div className="bg-[#1A1A1A] border border-[#2A2520] rounded-xl p-8 text-white shadow-2xl flex flex-col items-center">
           <div className="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
           <p className="mt-4 text-sm text-slate-400">Loading today's puzzle...</p>
@@ -307,7 +307,7 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
 
   if (error || !puzzle) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-2 sm:p-4">
         <div className="bg-[#1A1A1A] border border-[#2A2520] rounded-xl p-6 text-white shadow-2xl max-w-sm text-center">
           <AlertTriangle className="w-10 h-10 text-amber-500 mx-auto mb-3" />
           <p className="text-sm text-slate-300">{error || 'Puzzle unavailable'}</p>
@@ -321,8 +321,8 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
   const outerLetters = shuffledOuterLetters.length > 0 ? shuffledOuterLetters : puzzle.letters.slice(1);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
-      <div className="w-full max-w-4xl bg-[#1A1A1A] border border-[#2A2520] rounded-xl p-6 text-[#E8E6E3] shadow-2xl h-[85vh] flex flex-col overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-2 sm:p-4">
+      <div className="w-full max-w-5xl bg-[#1A1A1A] border border-[#2A2520] rounded-xl p-4 sm:p-6 text-[#E8E6E3] shadow-2xl h-[90vh] flex flex-col overflow-hidden">
         
         {/* Header */}
         <div className="flex items-center justify-between border-b border-[#2A2520] pb-3 shrink-0">
@@ -349,7 +349,7 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
         </div>
 
         {/* Scrollable body */}
-        <div className="flex-1 overflow-y-auto py-4">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden py-4 pb-8">
           <div className="flex flex-col md:flex-row gap-6 h-full">
             
             {/* Left side: Wheel */}
@@ -359,7 +359,7 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
                 onClick={handleShuffle} 
                 className="absolute -top-2 -left-2 z-10 flex items-center justify-center gap-2 px-3 py-2 bg-[#2A2520] hover:bg-[#3A3530] text-white text-xs font-semibold rounded-lg transition-colors cursor-pointer"
               >
-                <RotateCcw className="w-3 h-3" /> Re-shuffle
+                <RotateCcw className="w-3 h-3" /> Re-shuffle Letters
               </button>
 
 
@@ -397,30 +397,28 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
               
               {/* Top: Input & Messages (MOBILE FIX) */}
               <div className="space-y-4 shrink-0">
-                <form onSubmit={handleSubmitWord} className="flex gap-2 items-center">
+                <form onSubmit={handleSubmitWord} className="flex gap-1 sm:gap-2 items-center">
                   <input
                     id="word-input"
                     type="text"
                     value={inputWord}
                     onChange={(e) => updateInputWord(e.target.value.toLowerCase())}
-                    // MOBILE FIX: Prevent keyboard from opening, only allow letter clicks
                     inputMode="none"
                     readOnly
                     onFocus={(e) => e.target.blur()}
                     placeholder="Tap letters to type..."
                     disabled={completed}
-                    className="flex-1 bg-[#141414] border border-[#2A2520] rounded-lg px-4 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 disabled:opacity-50"
+                    className="flex-1 bg-[#141414] border border-[#2A2520] rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 disabled:opacity-50 min-w-0"
                   />
-                  {/* NEW: Backspace Button */}
                   <button
                     type="button"
                     onClick={() => setInputWord(prev => prev.slice(0, -1))}
-                    className="p-2 bg-[#2A2520] hover:bg-[#3A3530] text-white rounded-lg transition-colors cursor-pointer"
+                    className="p-2 sm:p-2 bg-[#2A2520] hover:bg-[#3A3530] text-white rounded-lg transition-colors cursor-pointer shrink-0"
                     aria-label="Delete last letter"
                   >
                     <Delete className="w-5 h-5" />
                   </button>
-                  <button type="submit" disabled={completed || !inputWord} className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-lg text-sm font-semibold transition-colors">Submit</button>
+                  <button type="submit" disabled={completed || !inputWord} className="px-3 sm:px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-lg text-sm font-semibold transition-colors shrink-0">Submit</button>
                 </form>
 
                 {flashMessage && (
