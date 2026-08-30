@@ -340,13 +340,23 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
           <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors"><X className="w-5 h-5" /></button>
         </div>
 
+
         {/* Info bar */}
-        <div className="flex items-center justify-between text-xs text-slate-400 py-2 border-b border-[#2A2520] shrink-0">
-          <span>🎯 {foundWords.length} / {puzzle.targetCount} found</span>
-          <span>⭐ Score: {score}</span>
-          <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {formatTime(elapsed)}</span>
-          <span className="text-[10px] text-slate-500">Resets daily at around 12:00 midnight IST</span>
+        <div className="flex items-center justify-between text-xs text-slate-400 py-2 border-b border-[#2A2520] shrink-0 gap-2">
+          {/* Main Stats Row (Word count, Score, Time - Always stays on one line) */}
+          <div className="flex items-center gap-3 sm:gap-4 whitespace-nowrap">
+            <span>🎯 {foundWords.length} / {puzzle.targetCount} found</span>
+            <span>⭐ Score: {score}</span>
+            <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {formatTime(elapsed)}</span>
+          </div>
+
+          {/* Reset Message (Pushed right, broken into two lines) */}
+          <div className="flex flex-col items-end text-right text-[10px] text-slate-500 leading-tight">
+            <span>Resets daily at around</span>
+            <span>12:00 midnight IST</span>
+          </div>
         </div>
+
 
         {/* Scrollable body */}
         <div className="flex-1 overflow-y-auto overflow-x-hidden py-4 pb-8">

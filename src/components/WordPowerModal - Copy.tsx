@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, Sparkles, RotateCcw, AlertTriangle, Clock, CheckCircle2, Brain, Star, XCircle, HelpCircle } from 'lucide-react';
+import { X, Sparkles, RotateCcw, AlertTriangle, Clock, CheckCircle2, Brain, Star, XCircle, HelpCircle, Delete } from 'lucide-react';
 import { WordPowerPuzzle, WordPowerProgress, WordPowerWord } from '../types';
 import { getWordPowerProgress, saveWordPowerProgress, clearWordPowerProgress } from '../utils/storage';
 
@@ -27,7 +27,7 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
   const [elapsed, setElapsed] = useState(0);
   const [completed, setCompleted] = useState(false);
   const [showRevealConfirm, setShowRevealConfirm] = useState(false);
-  const [showHelp, setShowHelp] = useState(false); // NEW: Help Modal state
+  const [showHelp, setShowHelp] = useState(false); // Help Modal state
   const [inputWord, setInputWord] = useState('');
   const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' | 'info' } | null>(null);
   
@@ -40,19 +40,20 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
 
   const timerRef = useRef<number | null>(null);
 
+  // Load puzzle and progress (with fail-safe for missing puzzle)
   useEffect(() => {
     const loadPuzzle = async () => {
       try {
         // 1. Fetch puzzle from server
-        let res = await fetch('/api/get-puzzle'); // CHANGED FROM const TO let
+        let res = await fetch('/api/get-puzzle');
         const text = await res.text();
         if (!text) throw new Error('Puzzle data is empty. Please regenerate the puzzle.');
 
         // Fail-safe: If the puzzle doesn't exist yet, force the generator to create it, then fetch again!
         if (!res.ok) {
           console.log("Puzzle not found, generating a new one now...");
-          await fetch('/api/generate-puzzle'); // Trigger generation
-          res = await fetch('/api/get-puzzle'); // Reassigning res (this works now)
+          await fetch('/api/generate-puzzle');
+          res = await fetch('/api/get-puzzle');
         }
 
         let rawData;
@@ -92,6 +93,7 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
           return;
         }
 
+        // Check existing progress
         const saved = getWordPowerProgress();
         if (saved && saved.puzzleDate === puzzleData.date) {
           setFoundWords(saved.foundWords);
@@ -123,12 +125,14 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
     loadPuzzle();
   }, []);
 
+  // Timer
   useEffect(() => {
     if (completed || loading) return;
     timerRef.current = window.setInterval(() => setElapsed(prev => prev + 1), 1000);
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [completed, loading]);
 
+  // Save progress
   useEffect(() => {
     if (!puzzle || loading || completed) return;
     const progress: WordPowerProgress = {
@@ -161,6 +165,7 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
     }
   }, [foundWords, puzzle, completed, elapsed, score, startTime]);
 
+  // Letter validation helpers
   const getLetterCounts = (word: string): Record<string, number> => {
     const counts: Record<string, number> = {};
     for (const char of word) counts[char] = (counts[char] || 0) + 1;
@@ -197,9 +202,9 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
     const word = inputWord.trim().toLowerCase();
     if (!word) return;
 
-    const centreLetter = puzzle.letters[0]; // Need to define this here for the message logic
+    const centreLetter = puzzle.letters[0];
 
-    // 1. NEW: Check if it's too short
+    // 1. Check if it's too short
     if (word.length < 4) {
       setMessage({ text: 'This word is too short.', type: 'error' });
       setInputWord('');
@@ -207,7 +212,7 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
       return;
     }
 
-    // 2. NEW: Check if central letter is missing
+    // 2. Check if central letter is missing
     if (!word.includes(centreLetter)) {
       setMessage({ text: 'Central letter missing.', type: 'error' });
       setInputWord('');
@@ -215,7 +220,7 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
       return;
     }
 
-    // 3. Prevent overuse of letters on submit (for pasted words)
+    // 3. Prevent overuse of letters
     const puzzleCounts = getLetterCounts(puzzle.letters.join(''));
     const wordCounts = getLetterCounts(word);
     for (const letter in wordCounts) {
@@ -235,6 +240,7 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
       return;
     }
 
+    // 5. Already found?
     if (foundWords.includes(word)) {
       setMessage({ text: `"${word}" already found!`, type: 'error' });
       setInputWord('');
@@ -242,6 +248,7 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
       return;
     }
 
+    // Add word
     const wordData = puzzle.allWords.find(w => w.word === word);
     const definition = wordData?.definition || 'No definition available.';
     const example = wordData?.example || 'No example available.';
@@ -289,7 +296,7 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
 
   if (loading) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-2 sm:p-4">
         <div className="bg-[#1A1A1A] border border-[#2A2520] rounded-xl p-8 text-white shadow-2xl flex flex-col items-center">
           <div className="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
           <p className="mt-4 text-sm text-slate-400">Loading today's puzzle...</p>
@@ -300,7 +307,7 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
 
   if (error || !puzzle) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-2 sm:p-4">
         <div className="bg-[#1A1A1A] border border-[#2A2520] rounded-xl p-6 text-white shadow-2xl max-w-sm text-center">
           <AlertTriangle className="w-10 h-10 text-amber-500 mx-auto mb-3" />
           <p className="text-sm text-slate-300">{error || 'Puzzle unavailable'}</p>
@@ -314,19 +321,19 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
   const outerLetters = shuffledOuterLetters.length > 0 ? shuffledOuterLetters : puzzle.letters.slice(1);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
-      <div className="w-full max-w-4xl bg-[#1A1A1A] border border-[#2A2520] rounded-xl p-6 text-[#E8E6E3] shadow-2xl h-[85vh] flex flex-col overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-2 sm:p-4">
+      <div className="w-full max-w-5xl bg-[#1A1A1A] border border-[#2A2520] rounded-xl p-4 sm:p-6 text-[#E8E6E3] shadow-2xl h-[90vh] flex flex-col overflow-hidden">
         
         {/* Header */}
         <div className="flex items-center justify-between border-b border-[#2A2520] pb-3 shrink-0">
           <div className="flex items-center gap-2">
             <Brain className="w-5 h-5 text-indigo-400" />
             <h2 className="text-xl font-bold text-white">Word Power</h2>
-            {/* NEW: Help Button */}
             <button
               onClick={() => setShowHelp(true)}
+              className="flex items-center gap-1 text-xs font-bold px-2 py-1 bg-slate-700 rounded hover:bg-slate-600 transition-colors cursor-pointer"
               title="How to play"
-              className="flex items-center gap-1 text-xs font-bold px-2 py-1 bg-slate-700 rounded hover:bg-slate-600 transition-colors cursor-pointer">
+            >
               <HelpCircle className="w-4 h-4" /> Help
             </button>
           </div>
@@ -342,11 +349,20 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
         </div>
 
         {/* Scrollable body */}
-        <div className="flex-1 overflow-y-auto py-4">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden py-4 pb-8">
           <div className="flex flex-col md:flex-row gap-6 h-full">
             
             {/* Left side: Wheel */}
-            <div className="flex-shrink-0 flex flex-col items-center justify-start pt-4 pb-4">
+            <div className="flex-shrink-0 flex flex-col items-center justify-start pt-4 pb-4 relative">
+              {/* ADD THIS: Re-shuffle Button moved to TOP LEFT */}
+              <button 
+                onClick={handleShuffle} 
+                className="absolute -top-2 -left-2 z-10 flex items-center justify-center gap-2 px-3 py-2 bg-[#2A2520] hover:bg-[#3A3530] text-white text-xs font-semibold rounded-lg transition-colors cursor-pointer"
+              >
+                <RotateCcw className="w-3 h-3" /> Re-shuffle Letters
+              </button>
+
+
               <div className="relative w-64 h-64 mx-auto">
                 <svg viewBox="0 0 200 200" className="w-full h-full">
                   {outerLetters.map((letter, idx) => {
@@ -373,28 +389,36 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
                 <p className="text-center text-[10px] text-slate-500 mt-2">
                   Every word must contain central letter <span className="text-indigo-400 font-bold">{centreLetter.toUpperCase()}</span>
                 </p>
-                <button onClick={handleShuffle} className="mt-4 mx-auto flex items-center justify-center gap-2 px-4 py-2 bg-[#2A2520] hover:bg-[#3A3530] text-white text-xs font-semibold rounded-lg transition-colors cursor-pointer">
-                  <RotateCcw className="w-3 h-3" /> Re-shuffle Letters
-                </button>
               </div>
             </div>
 
             {/* Right side: Input, Found Words, Reveal */}
             <div className="flex-1 min-w-0 flex flex-col">
               
-              {/* Top: Input & Messages */}
+              {/* Top: Input & Messages (MOBILE FIX) */}
               <div className="space-y-4 shrink-0">
-                <form onSubmit={handleSubmitWord} className="flex gap-2">
+                <form onSubmit={handleSubmitWord} className="flex gap-1 sm:gap-2 items-center">
                   <input
                     id="word-input"
                     type="text"
                     value={inputWord}
                     onChange={(e) => updateInputWord(e.target.value.toLowerCase())}
-                    placeholder="Type a word..."
+                    inputMode="none"
+                    readOnly
+                    onFocus={(e) => e.target.blur()}
+                    placeholder="Tap letters to type..."
                     disabled={completed}
-                    className="flex-1 bg-[#141414] border border-[#2A2520] rounded-lg px-4 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 disabled:opacity-50"
+                    className="flex-1 bg-[#141414] border border-[#2A2520] rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 disabled:opacity-50 min-w-0"
                   />
-                  <button type="submit" disabled={completed || !inputWord} className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-lg text-sm font-semibold transition-colors">Submit</button>
+                  <button
+                    type="button"
+                    onClick={() => setInputWord(prev => prev.slice(0, -1))}
+                    className="p-2 sm:p-2 bg-[#2A2520] hover:bg-[#3A3530] text-white rounded-lg transition-colors cursor-pointer shrink-0"
+                    aria-label="Delete last letter"
+                  >
+                    <Delete className="w-5 h-5" />
+                  </button>
+                  <button type="submit" disabled={completed || !inputWord} className="px-3 sm:px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-lg text-sm font-semibold transition-colors shrink-0">Submit</button>
                 </form>
 
                 {flashMessage && (
@@ -457,10 +481,10 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
           </div>
         </div>
 
-        {/* Footer */}
+        {/* Footer with smaller disclaimer on mobile */}
         <div className="border-t border-[#2A2520] pt-3 shrink-0 flex items-center justify-between gap-4">
-          <p className="text-[10px] text-slate-500 leading-relaxed max-w-[70%]">
-            <span className="font-bold">Disclaimer:</span> In absence of a reliable free source, the puzzle relies on a mix of non-AI and AI dependent actions to generate the word list and meanings. You may find a few words missing or some definitions a little off. However, in testing we have seen that the accuracy is close to 95%.
+          <p className="text-[8px] text-slate-500 leading-relaxed max-w-[60%] sm:max-w-[70%]">
+            <span className="font-bold">Disclaimer:</span> Relies on AI. You may find a few words missing. Accuracy is close to 95%.
           </p>
           <button onClick={onClose} className="px-6 py-2 text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors shrink-0">Close</button>
         </div>
@@ -479,7 +503,7 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
           </div>
         )}
 
-        {/* NEW: Help Modal */}
+        {/* Help Modal */}
         {showHelp && (
           <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/80 p-4">
             <div className="bg-[#1A1A1A] border border-[#2A2520] rounded-xl p-6 max-w-md w-full text-white space-y-4 shadow-2xl">
