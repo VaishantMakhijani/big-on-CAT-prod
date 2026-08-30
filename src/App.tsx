@@ -216,16 +216,26 @@ export default function App() {
       </div>
 
       {/* Left Navigation Sidebar */}
-      <div className={`flex-1 lg:flex-none ${mobileTab === 'study' ? 'block' : 'hidden'} lg:block h-full overflow-hidden hidden lg:block`}>
-        <Sidebar
-          books={books}
-          tasks={tasks}
-          onBooksChange={setBooks}
-          onTasksChange={setTasks}
-          onOpenPdf={setViewingPdfBook}
-          onOpenAnalytics={() => setShowAnalytics(true)}
-          onOpenTimer={() => setShowTimer(true)}
-        />
+      <div className={`flex-1 lg:flex-none ${mobileTab === 'study' ? 'block' : 'hidden'} lg:block h-full overflow-hidden`}>
+        {/* Show a message on mobile instead of the sidebar */}
+        <div className="lg:hidden flex items-center justify-center h-full p-6 bg-slate-50">
+          <p className="text-center text-sm text-slate-500">
+            The Question Timer, Study Progress, and Calendar Manager are available <strong>only on the desktop webpage</strong>.
+          </p>
+        </div>
+        
+        {/* Desktop Sidebar (hidden on mobile via CSS) */}
+        <div className="hidden lg:block h-full">
+          <Sidebar
+            books={books}
+            tasks={tasks}
+            onBooksChange={setBooks}
+            onTasksChange={setTasks}
+            onOpenPdf={setViewingPdfBook}
+            onOpenAnalytics={() => setShowAnalytics(true)}
+            onOpenTimer={() => setShowTimer(true)}
+          />
+        </div>
       </div>
 
       {/* Main Content Area (News Reader & Reading Timer) */}
