@@ -555,8 +555,8 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
                 {revealMode === 'full' ? 'All Words with Meanings' : 'All Words'}
               </h3>
               
-              <div className="flex-1 overflow-y-auto pr-2">
-                <div className="grid grid-cols-4 gap-4">
+              <div className="flex-1 overflow-y-auto overflow-x-hidden pr-2">
+                <div className={`grid gap-4 ${revealMode === 'full' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4' : 'grid-cols-2 md:grid-cols-4'}`}>
                   {puzzle.allWords
                     .slice()
                     .sort((a, b) => a.word.localeCompare(b.word))
