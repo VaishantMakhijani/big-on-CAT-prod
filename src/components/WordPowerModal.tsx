@@ -44,17 +44,10 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
   useEffect(() => {
     const loadPuzzle = async () => {
       try {
-        // 1. Fetch puzzle from server
-        let res = await fetch('/api/get-puzzle');
+        // 1. Fetch puzzle from server (Fail-safe removed)
+        const res = await fetch('/api/get-puzzle');
         const text = await res.text();
         if (!text) throw new Error('Puzzle data is empty. Please regenerate the puzzle.');
-
-        // Fail-safe: If the puzzle doesn't exist yet, force the generator to create it, then fetch again!
-        if (!res.ok) {
-          console.log("Puzzle not found, generating a new one now...");
-          await fetch('/api/generate-puzzle');
-          res = await fetch('/api/get-puzzle');
-        }
 
         let rawData;
         try {
@@ -89,7 +82,7 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
         puzzleData.wordDetails = puzzleData.allWords;
 
         setPuzzle(puzzleData);
-        setShuffledOuterLetters(puzzleData.letters.slice(1));
+        setShuffledOuterLetters(shuffleArray(puzzleData.letters.slice(1)));
 
         if (puzzleData.targetCount === 0) {
           clearWordPowerProgress();
@@ -195,6 +188,15 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
       }
     }
     setInputWord(newWord);
+  };
+
+  const shuffleArray = (arr: string[]) => {
+    const newArr = [...arr];
+    for (let i = newArr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+    }
+    return newArr;
   };
 
   const handleShuffle = () => {
