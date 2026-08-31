@@ -64,9 +64,20 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
           throw new Error('Puzzle data is corrupted.');
         }
 
+        // FIX: Remove only ONE instance of the center letter, preserving duplicate letters.
+        const puzzleLetters = rawData.puzzleWord.split('');
+        let centralRemoved = false;
+        const outerLetters = puzzleLetters.filter((l: string) => {
+          if (l === rawData.centralLetter && !centralRemoved) {
+            centralRemoved = true;
+            return false; // Remove ONLY the first instance of the central letter
+          }
+          return true; // Keep all other letters (including any duplicates)
+        });
+
         const puzzleData: WordPowerPuzzle = {
           date: rawData.generatedDate || new Date().toISOString().split('T')[0],
-          letters: [rawData.centralLetter, ...rawData.puzzleWord.split('').filter((l: string) => l !== rawData.centralLetter)],
+          letters: [rawData.centralLetter, ...outerLetters], // Use the fixed array
           targetCount: rawData.words.length,
           validWords: rawData.words.map((w: any) => w.word),
           allWords: rawData.words.map((w: any) => ({

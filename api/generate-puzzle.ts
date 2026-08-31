@@ -78,20 +78,20 @@ export default async function handler(req: any, res: any) {
     }
 
     // Pick the 9-letter puzzle word
-    //const puzzleWord = wordsList[Math.floor(Math.random() * wordsList.length)];
-    const puzzleWord = "advertise"; // TEMPORARILY HARDCODED FOR TESTING
+    const puzzleWord = wordsList[Math.floor(Math.random() * wordsList.length)];
+    //const puzzleWord = "advertise"; // TEMPORARILY HARDCODED FOR TESTING
     
     // Pick a preferred central letter (vowels or L, N, R, S, T)
-    //const preferredLetters = ['a', 'e', 'i', 'o', 'u', 'l', 'n', 'r', 's', 't'];
-    //let centralLetter = puzzleWord[Math.floor(Math.random() * puzzleWord.length)];
-    //if (!preferredLetters.includes(centralLetter)) {
-    //    const preferred = puzzleWord.split('').filter(char => preferredLetters.includes(char));
-    //    if (preferred.length > 0) {
-    //        centralLetter = preferred[Math.floor(Math.random() * preferred.length)];
-    //    }
-    //}
+    const preferredLetters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+    let centralLetter = puzzleWord[Math.floor(Math.random() * puzzleWord.length)];
+    if (!preferredLetters.includes(centralLetter)) {
+        const preferred = puzzleWord.split('').filter(char => preferredLetters.includes(char));
+        if (preferred.length > 0) {
+            centralLetter = preferred[Math.floor(Math.random() * preferred.length)];
+        }
+    }
 
-    const centralLetter = "e"; // TEMPORARILY HARDCODED FOR TESTING
+    //const centralLetter = "e"; // TEMPORARILY HARDCODED FOR TESTING
 
     const puzzleMap = getLetterCountMap(puzzleWord);
     const candidates = fullDictionary.filter(word => {
@@ -138,6 +138,11 @@ export default async function handler(req: any, res: any) {
   - Check for distinct Noun vs. Verb meanings (e.g., "shake" as a physical motion vs. a cold beverage).
   - Check for completely unrelated homographs/domains (e.g., "seal" as an animal vs. an official stamp vs. a watertight barrier).
   - If a word has multiple common meanings, you MUST list all major definitions separated by a semicolon (;), and provide a matching multi-part usage sentence.
+
+  5a. MINIMUM LENGTH RULE (CRITICAL):
+  - All words MUST be at least 4 letters long.
+  - Do NOT include any 3-letter words, 2-letter words, or 1-letter words.
+  - If you are unsure, check the length. If it is less than 4, remove it.
 
   6. OUTPUT FORMAT:
   Return ONLY a valid JSON array matching the exact structure below. Do not wrap it in parent objects (no {"success": true...}) and do not add any surrounding text or markdown wrappers beyond the array:
