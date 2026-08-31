@@ -78,20 +78,20 @@ export default async function handler(req: any, res: any) {
     }
 
     // Pick the 9-letter puzzle word
-    const puzzleWord = wordsList[Math.floor(Math.random() * wordsList.length)];
-    //const puzzleWord = "milkshake"; // TEMPORARILY HARDCODED FOR TESTING
+    //const puzzleWord = wordsList[Math.floor(Math.random() * wordsList.length)];
+    const puzzleWord = "advertise"; // TEMPORARILY HARDCODED FOR TESTING
     
     // Pick a preferred central letter (vowels or L, N, R, S, T)
-    const preferredLetters = ['a', 'e', 'i', 'o', 'u', 'l', 'n', 'r', 's', 't'];
-    let centralLetter = puzzleWord[Math.floor(Math.random() * puzzleWord.length)];
-    if (!preferredLetters.includes(centralLetter)) {
-        const preferred = puzzleWord.split('').filter(char => preferredLetters.includes(char));
-        if (preferred.length > 0) {
-            centralLetter = preferred[Math.floor(Math.random() * preferred.length)];
-        }
-    }
+    //const preferredLetters = ['a', 'e', 'i', 'o', 'u', 'l', 'n', 'r', 's', 't'];
+    //let centralLetter = puzzleWord[Math.floor(Math.random() * puzzleWord.length)];
+    //if (!preferredLetters.includes(centralLetter)) {
+    //    const preferred = puzzleWord.split('').filter(char => preferredLetters.includes(char));
+    //    if (preferred.length > 0) {
+    //        centralLetter = preferred[Math.floor(Math.random() * preferred.length)];
+    //    }
+    //}
 
-    //const centralLetter = "e"; // TEMPORARILY HARDCODED FOR TESTING
+    const centralLetter = "e"; // TEMPORARILY HARDCODED FOR TESTING
 
     const puzzleMap = getLetterCountMap(puzzleWord);
     const candidates = fullDictionary.filter(word => {
