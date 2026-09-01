@@ -64,7 +64,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div className="border-y border-slate-200 py-3 text-xs">
         <button
           onClick={onOpenTimer}
-          className="w-full flex items-center justify-center gap-1.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 py-2 px-3 rounded-lg font-semibold shadow-xs transition-colors cursor-pointer"
+          className="w-full flex items-center justify-center gap-1.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 py-2 px-3 rounded-lg font-semibold shadow-xs transition-colors cursor-pointer question-timer-button"
         >
           <Timer className="w-4 h-4 text-emerald-600" />
           <span>Question Timer</span>
@@ -74,9 +74,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* SECTION 1: STUDY PROGRESS */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800 uppercase tracking-wider">
-            <BookOpen className="w-4 h-4 text-indigo-600" />
-            <span>STUDY PROGRESS</span>
+          <div className="sidebar-study">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800 uppercase tracking-wider">
+              <BookOpen className="w-4 h-4 text-indigo-600" />
+              <span>STUDY PROGRESS</span>
+            </div>
           </div>
           <button
             onClick={handleTriggerAddBook}
@@ -118,9 +120,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* SECTION 2: CALENDAR MANAGER */}
       <div className="space-y-2 border-t border-slate-200 pt-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800 uppercase tracking-wider">
-            <CalendarIcon className="w-4 h-4 text-indigo-600" />
-            <span>CALENDAR MANAGER</span>
+          <div className="sidebar-calendar">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800 uppercase tracking-wider">
+              <CalendarIcon className="w-4 h-4 text-indigo-600" />
+              <span>CALENDAR MANAGER</span>
+            </div>
           </div>
           <button
             onClick={handleTriggerAddTask}

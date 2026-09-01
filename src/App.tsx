@@ -9,6 +9,8 @@ import { AnalyticsModal } from './components/AnalyticsModal';
 import { QuestionTimerModal } from './components/QuestionTimerModal';
 import { PdfViewerModal } from './components/PdfViewerModal';
 import { WordPowerModal } from './components/WordPowerModal';
+import { trackVisit } from './utils/tracking';
+import { AppTour } from './components/AppTour';
 import {
   UserSettings,
   StudyBook,
@@ -43,6 +45,13 @@ export default function App() {
   const [viewingPdfBook, setViewingPdfBook] = useState<StudyBook | null>(null);
   // Add this near other modal states (around line 30)
   const [showWordPower, setShowWordPower] = useState(false);
+
+  // 🔽 ADD THIS BLOCK RIGHT AFTER THE useState declarations and BEFORE any other logic 🔽
+  useEffect(() => {
+    trackVisit();   // This runs once when the app first loads
+  }, []);           // The empty [] means "run only once, not on every update"
+  // 🔼 END OF BLOCK 🔼
+
 
   // Quiz Modal State
   const [showQuizModal, setShowQuizModal] = useState(false);
@@ -346,6 +355,8 @@ export default function App() {
         <WordPowerModal onClose={() => setShowWordPower(false)} />
       )}
 
+      {/* 👇 ADD THE TOUR HERE – right before the final closing div */}
+      <AppTour />
 
     </div>
   );

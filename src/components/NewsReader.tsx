@@ -247,7 +247,7 @@ export const NewsReader: React.FC<NewsReaderProps> = ({
           <div className="flex flex-wrap items-center gap-2 mt-1">
             <button
               onClick={onOpenSettings}
-              className="text-xs text-slate-600 hover:text-indigo-600 bg-slate-50 hover:bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-md flex items-center gap-1 font-medium transition-colors cursor-pointer"
+              className="text-xs text-slate-600 hover:text-indigo-600 bg-slate-50 hover:bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-md flex items-center gap-1 font-medium transition-colors cursor-pointer settings-button"
             >
               <Settings className="w-3.5 h-3.5 text-indigo-600" />
               <span>Keywords / Info Settings</span>
@@ -255,7 +255,7 @@ export const NewsReader: React.FC<NewsReaderProps> = ({
             {onOpenAnalytics && (
               <button
                 onClick={onOpenAnalytics}
-                className="text-xs text-slate-700 hover:text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 px-2.5 py-1 rounded-md flex items-center gap-1 font-semibold transition-colors cursor-pointer"
+                className="text-xs text-slate-700 hover:text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 px-2.5 py-1 rounded-md flex items-center gap-1 font-semibold transition-colors cursor-pointer analytics-button"
               >
                 <BarChart3 className="w-3.5 h-3.5 text-indigo-600" />
                 <span>Quiz Analytics</span>
@@ -267,7 +267,7 @@ export const NewsReader: React.FC<NewsReaderProps> = ({
         {/* WORD POWER BUTTON */}
         <button
           onClick={onOpenWordPower}
-          className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white text-xs font-bold px-5 py-2 rounded-lg shadow-md transition-all cursor-pointer shrink-0 self-start sm:self-auto"
+          className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white text-xs font-bold px-5 py-2 rounded-lg shadow-md transition-all cursor-pointer shrink-0 self-start sm:self-auto word-power-button"
         >
           <Sparkles className="w-4 h-4" />
           <div className="flex flex-col items-start leading-tight">
@@ -279,7 +279,7 @@ export const NewsReader: React.FC<NewsReaderProps> = ({
         <button
           onClick={fetchNews}
           disabled={loading}
-          className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-4 py-2 rounded-lg shadow-xs transition-colors cursor-pointer disabled:opacity-50 shrink-0 self-start sm:self-auto"
+          className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-4 py-2 rounded-lg shadow-xs transition-colors cursor-pointer disabled:opacity-50 shrink-0 self-start sm:self-auto sync-feeds-button"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           <span>{loading ? 'Syncing Feeds...' : 'Sync Feeds'}</span>
@@ -287,7 +287,7 @@ export const NewsReader: React.FC<NewsReaderProps> = ({
       </div>
 
       {/* Main Container */}
-      <div className="flex-1 bg-white border border-slate-200 rounded-xl p-5 flex flex-col space-y-4 overflow-hidden shadow-xs">
+      <div className="flex-1 bg-white border border-slate-200 rounded-xl p-5 flex flex-col space-y-4 overflow-hidden shadow-xs news-feed-area">
         {/* Subheader & legend */}
         <div className="flex items-center justify-between text-xs border-b border-slate-200 pb-3 shrink-0">
           <div className="space-y-0.5">

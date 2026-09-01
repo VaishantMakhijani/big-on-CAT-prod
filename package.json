@@ -17,6 +17,7 @@
   "dependencies": {
     "@google/genai": "^2.18.0",
     "@google/generative-ai": "^0.24.1",
+    "@vercel/blob": "latest",
     "@vitejs/plugin-react": "^5.0.4",
     "an-array-of-english-words": "^2.0.0",
     "dotenv": "^17.2.3",
@@ -28,10 +29,11 @@
     "pluralize": "^8.0.0",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
+    "react-is": "^19.2.8",
+    "react-joyride": "^2.7.1",
     "recharts": "^3.10.1",
     "rss-parser": "^3.13.0",
-    "wordnet": "^2.0.0",
-    "@vercel/blob": "latest"
+    "wordnet": "^2.0.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
