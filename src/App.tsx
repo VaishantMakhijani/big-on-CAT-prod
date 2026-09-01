@@ -39,19 +39,35 @@ export default function App() {
   // Modal triggers
   const [showSettings, setShowSettings] = useState(false);
   const [showApiKeyNotice, setShowApiKeyNotice] = useState(false);
-  const [showPortableInfo, setShowPortableInfo] = useState(() => settings.showPortableInfo);
   const [showAnalytics, setShowAnalytics] = useState(false);
   const [showTimer, setShowTimer] = useState(false);
   const [viewingPdfBook, setViewingPdfBook] = useState<StudyBook | null>(null);
-  // Add this near other modal states (around line 30)
   const [showWordPower, setShowWordPower] = useState(false);
 
-  // 🔽 ADD THIS BLOCK RIGHT AFTER THE useState declarations and BEFORE any other logic 🔽
-  useEffect(() => {
-    trackVisit();   // This runs once when the app first loads
-  }, []);           // The empty [] means "run only once, not on every update"
-  // 🔼 END OF BLOCK 🔼
+  // ---------- NEW: Tour & Portable Info sequencing ----------
+  // Check if the tour will run (first visit in this session)
+  const [shouldShowTour] = useState(() => !sessionStorage.getItem('bp_tour_seen'));
 
+  // Show portable info only if settings allow, but delay if tour will run
+  const [showPortableInfo, setShowPortableInfo] = useState(() => {
+    if (!settings.showPortableInfo) return false;
+    // If tour is going to run, hide the modal initially; it will appear after tour ends
+    return shouldShowTour ? false : true;
+  });
+
+  // Handler called when the tour finishes or is skipped
+  const handleTourFinish = () => {
+    // After the tour ends, show the portable info if it was not dismissed before
+    if (settings.showPortableInfo) {
+      setShowPortableInfo(true);
+    }
+  };
+  // -----------------------------------------------------------
+
+  // Track site visit once per day
+  useEffect(() => {
+    trackVisit();
+  }, []);
 
   // Quiz Modal State
   const [showQuizModal, setShowQuizModal] = useState(false);
@@ -254,7 +270,7 @@ export default function App() {
           onOpenSettings={() => setShowSettings(true)}
           onOpenAnalytics={() => setShowAnalytics(true)}
           onStartQuiz={handleStartQuiz}
-          onOpenWordPower={() => setShowWordPower(true)}   // <-- add this
+          onOpenWordPower={() => setShowWordPower(true)}
         />
       </main>
 
@@ -355,8 +371,8 @@ export default function App() {
         <WordPowerModal onClose={() => setShowWordPower(false)} />
       )}
 
-      {/* 👇 ADD THE TOUR HERE – right before the final closing div */}
-      <AppTour />
+      {/* 👇 Tour – now with onFinish callback */}
+      <AppTour onFinish={handleTourFinish} />
 
     </div>
   );

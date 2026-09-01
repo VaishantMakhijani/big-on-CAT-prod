@@ -1,8 +1,8 @@
 // src/components/AppTour.tsx
 import React, { useState, useEffect } from 'react';
-import * as Joyride from 'react-joyride';
+import Joyride from 'react-joyride';
 
-// Define all tour steps
+// Define all tour steps (keep your existing steps)
 const TOUR_STEPS = [
   {
     target: 'body',
@@ -59,7 +59,12 @@ const TOUR_STEPS = [
 
 const TOUR_STORAGE_KEY = 'bp_tour_seen';
 
-export const AppTour: React.FC = () => {
+// New prop: onFinish – called when the tour is completed or skipped
+interface AppTourProps {
+  onFinish?: () => void;
+}
+
+export const AppTour: React.FC<AppTourProps> = ({ onFinish }) => {
   const [run, setRun] = useState(false);
 
   useEffect(() => {
@@ -72,13 +77,17 @@ export const AppTour: React.FC = () => {
 
   const handleJoyrideCallback = (data: any) => {
     const { status } = data;
-    if (status === Joyride.STATUS.FINISHED || status === Joyride.STATUS.SKIPPED) {
+    // status can be 'finished', 'skipped', or 'closed'
+    if (status === 'finished' || status === 'skipped' || status === 'closed') {
       setRun(false);
+      if (onFinish) {
+        onFinish(); // tell App that the tour is done
+      }
     }
   };
 
   return (
-    <Joyride.default
+    <Joyride
       steps={TOUR_STEPS}
       run={run}
       continuous={true}
