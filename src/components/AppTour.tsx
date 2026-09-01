@@ -2,7 +2,17 @@
 import React, { useState, useEffect } from 'react';
 import Joyride from 'react-joyride';
 
-// Define all tour steps (keep your existing steps)
+// Define all tour steps – NEW ORDER:
+// 1. Welcome
+// 2. Word Power
+// 3. News Feed (with AI quiz info, placement: 'right')
+// 4. Quiz Analytics (moved here)
+// 5. Sync Feeds
+// 6. Study Progress
+// 7. Calendar Manager
+// 8. Question Timer
+// 9. Settings
+// 10. Closing
 const TOUR_STEPS = [
   {
     target: 'body',
@@ -17,8 +27,13 @@ const TOUR_STEPS = [
   },
   {
     target: '.news-feed-area',
-    content: '📰 **Global Intelligence Stand** – read curated articles from RSS feeds. AI highlights priority items based on your keywords.',
-    placement: 'left',
+    content: '📰 **Global Intelligence Stand** – read curated articles from RSS feeds. AI highlights priority items based on your keywords.\n\n🤖 **AI Quiz**: After reading an article, you can answer AI-generated CAT-pattern questions (needs a free Gemini API key to be saved by the user).',
+    placement: 'right', // Changed from 'left' to 'right' to avoid scrolling
+  },
+  {
+    target: '.analytics-button',
+    content: '📊 **Quiz Analytics** – review your performance, accuracy, and strengths/weaknesses across all your quiz attempts.',
+    placement: 'bottom',
   },
   {
     target: '.sync-feeds-button',
@@ -46,11 +61,6 @@ const TOUR_STEPS = [
     placement: 'bottom',
   },
   {
-    target: '.analytics-button',
-    content: '📊 **Quiz Analytics** – review your performance, accuracy, and strengths/weaknesses.',
-    placement: 'bottom',
-  },
-  {
     target: 'body',
     content: '🎉 That’s it! Explore and enjoy. You can close this tour anytime.',
     placement: 'center',
@@ -59,7 +69,6 @@ const TOUR_STEPS = [
 
 const TOUR_STORAGE_KEY = 'bp_tour_seen';
 
-// New prop: onFinish – called when the tour is completed or skipped
 interface AppTourProps {
   onFinish?: () => void;
 }
@@ -77,11 +86,10 @@ export const AppTour: React.FC<AppTourProps> = ({ onFinish }) => {
 
   const handleJoyrideCallback = (data: any) => {
     const { status } = data;
-    // status can be 'finished', 'skipped', or 'closed'
     if (status === 'finished' || status === 'skipped' || status === 'closed') {
       setRun(false);
       if (onFinish) {
-        onFinish(); // tell App that the tour is done
+        onFinish();
       }
     }
   };
