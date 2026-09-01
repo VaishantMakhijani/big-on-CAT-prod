@@ -28,7 +28,7 @@ const TOUR_STEPS = [
   {
     target: '.news-feed-area',
     content: '📰 **Global Intelligence Stand** – read curated articles from RSS feeds. AI highlights priority items based on your keywords.\n\n🤖 **AI Quiz**: After reading an article, you can answer AI-generated CAT-pattern questions (needs a free Gemini API key to be saved by the user).',
-    placement: 'right', // Changed from 'left' to 'right' to avoid scrolling
+    placement: 'center', // Changed from 'left' to 'right' to avoid scrolling
   },
   {
     target: '.analytics-button',
