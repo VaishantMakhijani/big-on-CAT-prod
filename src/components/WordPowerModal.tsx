@@ -506,7 +506,7 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
 
         {/* Footer with smaller disclaimer on mobile */}
         <div className="border-t border-[#2A2520] pt-3 shrink-0 flex items-center justify-between gap-4">
-          <p className="text-[10px] text-slate-500 leading-relaxed max-w-[60%] sm:max-w-[70%]">
+          <p className="text-[12px] sm:text-[10px] text-slate-500 leading-relaxed max-w-[60%] sm:max-w-[70%]">
             <span className="font-bold">Disclaimer:</span> Relies on AI. You may find a few words missing. Accuracy is close to 95%.
           </p>
           <button onClick={onClose} className="px-6 py-2 text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors shrink-0">Close</button>
