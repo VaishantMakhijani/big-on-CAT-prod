@@ -4,6 +4,8 @@ import { GoogleGenAI } from "@google/genai";
 import fs from 'fs';
 import path from 'path';
 
+console.log("generate-puzzle called at", new Date().toISOString());
+
 const csvPath = path.join(process.cwd(), 'api', 'words.csv');
 const fileContent = fs.readFileSync(csvPath, 'utf-8');
 const lines = fileContent.split('\n');
