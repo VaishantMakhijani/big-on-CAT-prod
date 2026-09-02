@@ -1,11 +1,12 @@
 {
   "rewrites": [
-    { "source": "/((?!api/).*)", "destination": "/" }
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/(.*)", "destination": "/" }
   ],
   "crons": [
     {
       "path": "/api/generate-puzzle",
-      "schedule": "40 2 * * *"
+      "schedule": "05 3 * * *"
     }
   ],
   "functions": {
