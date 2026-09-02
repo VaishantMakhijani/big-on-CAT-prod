@@ -51,12 +51,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       data[today].wordpower += 1;
     }
 
-    // 4. Write back to blob
+    // 4. Write back to blob – with allowOverwrite: true
     await put(BLOB_NAME, JSON.stringify(data, null, 2), {
       access: 'private',
       addRandomSuffix: false,
       token: process.env.BLOB_READ_WRITE_TOKEN,
       contentType: 'application/json',
+      allowOverwrite: true, // ✅ FIXED
     });
 
     return res.status(200).json({ success: true });

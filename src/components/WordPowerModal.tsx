@@ -53,8 +53,13 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
       try {
         // 1. Fetch puzzle from server (Fail-safe removed)
         const res = await fetch('/api/get-puzzle');
+        if (res.status === 404) {
+          throw new Error('Puzzle not found for today');
+        }
         const text = await res.text();
         if (!text) throw new Error('Puzzle data is empty. Please regenerate the puzzle.');
+        
+        
 
         let rawData;
         try {
@@ -127,7 +132,12 @@ export const WordPowerModal: React.FC<WordPowerModalProps> = ({ onClose }) => {
         }
 
       } catch (err: any) {
-        setError(err.message || 'Failed to load puzzle');
+        // ✅ Check if it's a "puzzle not found" error
+        if (err.message?.includes('not found') || err.message?.includes('does not exist')) {
+          setError('Today\'s puzzle isn\'t ready yet. Please check back later (puzzle generates at midnight IST).');
+        } else {
+          setError(err.message || 'Failed to load puzzle');
+        }
       } finally {
         setLoading(false);
       }
