@@ -22,7 +22,7 @@ const TOUR_STEPS = [
   },
   {
     target: '.word-power-button',
-    content: '🧠 **Word Power** – a daily word puzzle to build your vocabulary for competitive exams.',
+    content: '🧠 **Word Power** – a daily word puzzle (with meanings and usage examples) to build your vocabulary for competitive exams.',
     placement: 'bottom',
   },
   {
