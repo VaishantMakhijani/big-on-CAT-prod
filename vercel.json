@@ -2,12 +2,15 @@
   "crons": [
     {
       "path": "/api/generate-puzzle",
-      "schedule": "45 5 * * *"
+      "schedule": "0 6 * * *"
     }
   ],
   "functions": {
     "api/generate-puzzle.ts": {
       "includeFiles": "api/words.csv, api/dictionary.json"
     }
-  }
+  },
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1" }
+  ]
 }
