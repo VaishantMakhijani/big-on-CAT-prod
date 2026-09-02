@@ -11,6 +11,7 @@ import { PdfViewerModal } from './components/PdfViewerModal';
 import { WordPowerModal } from './components/WordPowerModal';
 import { trackVisit } from './utils/tracking';
 import { AppTour } from './components/AppTour';
+import { InstallPrompt } from './components/InstallPrompt';
 import {
   UserSettings,
   StudyBook,
@@ -373,6 +374,7 @@ export default function App() {
 
       {/* 👇 Tour – now with onFinish callback */}
       <AppTour onFinish={handleTourFinish} />
+      <InstallPrompt />
 
     </div>
   );
