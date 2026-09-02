@@ -7,7 +7,7 @@
   ],
   "functions": {
     "api/generate-puzzle.ts": {
-      "includeFiles": "api/{words.csv,dictionary.json}"
+      "includeFiles": "api/{words.csv,dictionary.json,count_1w.txt}"
     }
   },
   "routes": [

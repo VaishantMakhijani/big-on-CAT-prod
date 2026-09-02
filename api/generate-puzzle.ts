@@ -26,6 +26,34 @@ for (let i = startIndex; i < lines.length; i++) {
 const dictPath = path.join(process.cwd(), 'api', 'dictionary.json');
 const fullDictionary: string[] = JSON.parse(fs.readFileSync(dictPath, 'utf-8'));
 
+// ----- Load Zipf frequency data (count_1w.txt) -----
+const TOTAL_CORPUS_TOKENS = 1_024_908_267_229; // ~1 trillion words
+
+const freqFilePath = path.join(process.cwd(), 'api', 'count_1w.txt');
+const freqRaw = fs.readFileSync(freqFilePath, 'utf-8');
+const freqLines = freqRaw.split('\n');
+const frequencyMap = new Map<string, number>();
+
+for (const line of freqLines) {
+  const trimmed = line.trim();
+  if (!trimmed) continue;
+  const parts = trimmed.split('\t'); // count_1w.txt uses tab separation
+  if (parts.length < 2) continue;
+  const word = parts[0].toLowerCase();
+  const count = parseInt(parts[1], 10);
+  if (!isNaN(count)) {
+    frequencyMap.set(word, count);
+  }
+}
+console.log(`Loaded ${frequencyMap.size} words from frequency file.`);
+
+// Helper to compute Zipf score from raw count
+function getZipfScore(rawCount: number): number {
+  if (rawCount === 0) return 0;
+  const perBillion = (rawCount / TOTAL_CORPUS_TOKENS) * 1_000_000_000;
+  return Math.log10(perBillion);
+}
+
 function getLetterCountMap(word: string): Record<string, number> {
   const map: Record<string, number> = {};
   for (const char of word) map[char] = (map[char] || 0) + 1;
@@ -46,6 +74,8 @@ function getTodayIST(): string {
   const istTime = new Date(now.getTime() + (now.getTimezoneOffset() * 60 * 1000) + istOffset);
   return istTime.toISOString().split('T')[0];
 }
+
+const ZIPF_THRESHOLD = 2.3; // Keep words with Zipf >= 3.3
 
 export default async function handler(req: any, res: any) {
   try {
@@ -182,11 +212,22 @@ export default async function handler(req: any, res: any) {
 
     const cleanedWords = JSON.parse(responseGemini.text || '[]');
 
+    // --- Apply Zipf filter ---
+    const finalWords = cleanedWords.filter((item: any) => {
+      const rawCount = frequencyMap.get(item.word) || 0;
+      const zipf = getZipfScore(rawCount);
+      // Optionally log for debugging
+      // console.log(`${item.word}: raw=${rawCount}, zipf=${zipf.toFixed(2)}`);
+      return zipf >= ZIPF_THRESHOLD;
+    });
+
+    console.log(`AI returned ${cleanedWords.length} words, kept ${finalWords.length} after Zipf filter (≥ ${ZIPF_THRESHOLD}).`);
+
     const puzzleData = {
       puzzleWord,
       centralLetter,
       generatedDate: today,
-      words: cleanedWords
+      words: finalWords
     };
 
     // FIX: Ensure the blob is PUBLIC
