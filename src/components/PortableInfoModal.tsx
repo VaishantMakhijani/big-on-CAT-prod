@@ -38,7 +38,7 @@ export const PortableInfoModal: React.FC<PortableInfoModalProps> = ({ onClose })
           <div className="flex items-start gap-2.5 bg-amber-50 border border-amber-200 rounded-lg p-3 text-amber-900">
             <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
             <p className="text-xs leading-relaxed">
-              <strong className="text-amber-900 font-bold">Note:</strong> Clearing your browser's site cookies or cache will permanently reset your local progress, including study projects, calendar tasks, quiz history, and analytics.
+              <strong className="text-amber-900 font-bold">Note:</strong> Clearing your browser's site cookies or cache will permanently reset your local progress, including word power puzzle for the day, study projects, calendar tasks, quiz history, and analytics.
             </p>
           </div>
         </div>
