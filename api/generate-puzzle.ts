@@ -207,7 +207,7 @@ export default async function handler(req: any, res: any) {
   `;
     
     const responseGemini = await ai.models.generateContent({
-      model: "gemini-3.6-flash",
+      model: "gemini-3.7-flash",
       contents: `${SYSTEM_PROMPT}\n\nHere is the list of candidate words:\n${JSON.stringify(candidates)}`,
       config: { responseMimeType: "application/json" },
     });
