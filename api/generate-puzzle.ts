@@ -155,6 +155,7 @@ export default async function handler(req: any, res: any) {
     * Non-UK regional slang or colloquial proper-noun nicknames (e.g., discard Australian slang like "sheila").
     * Proper nouns, place names, and capitalized personal names.
   - KEEP: Standard everyday words, widely recognized botanical/zoological terms, and common technical words an educated reader would know (e.g., "ulna", "isle", "kale").
+  - Ensure that the original word is included with its meaning and usage
 
   3. ZERO PLURALS (CRITICAL):
   - If a word is a plural noun (e.g., "males", "miles", "hikes", "hakes", "lakes", "meals"), AND the base singular noun (e.g., "male", "mile", "hike", "hake", "lake", "meal") is also valid, you MUST return ONLY the singular word.
