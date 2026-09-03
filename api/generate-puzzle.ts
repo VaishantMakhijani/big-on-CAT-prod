@@ -160,6 +160,7 @@ export default async function handler(req: any, res: any) {
   - If a word is a plural noun (e.g., "males", "miles", "hikes", "hakes", "lakes", "meals"), AND the base singular noun (e.g., "male", "mile", "hike", "hake", "lake", "meal") is also valid, you MUST return ONLY the singular word.
   - Strictly EXCLUDE the plural form.
   - Exception: If the word ending in 's' is primarily a 3rd-person singular verb (e.g., "heals", "makes") where the base form has a distinct primary verb meaning, or if the plural form has an independent, unique meaning not captured by the singular (e.g., "arms" as weapons vs "arm" as a limb), you may evaluate it accordingly. When in doubt, prefer the root/base lemma.
+  - IMPORTANT: Do NOT exclude past tense verbs or any verb forms that are not plural nouns. Only exclude plural nouns where the singular exists. Past participles and past tenses are allowed.
 
   4. DEFINITION QUALITY CONTROL (NO GRAMMATICAL COPIES):
   - FORBIDDEN: Do NOT write definitions that merely state grammar rules (e.g., DO NOT say "past tense of X", "plural of X", "third-person singular of X", or "a form of X").
